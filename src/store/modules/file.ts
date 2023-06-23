@@ -1,24 +1,34 @@
 import { defineStore } from "pinia";
 
 export type FileType = {
-  name: string;
+  label: string;
   id: string;
+  type: number;
   path: string;
 };
 
 export type FolderType = {
   id: string;
-  name: string;
+  label: string;
   path: string;
+  type: number;
   children: FileType[];
 };
 
 export type folderInFileType = FolderType[];
 
+export type outlineType = {
+  id: string;
+  label: string;
+  type: number;
+  children?: outlineType[];
+};
+
 const useFile = defineStore("file", {
   state() {
     return {
-      folderInFile: [] as folderInFileType[],
+      folderInFile: [] as folderInFileType,
+      outlineData: [] as outlineType[],
     };
   },
   actions: {

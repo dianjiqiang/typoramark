@@ -1,0 +1,21 @@
+html[class="light"] {
+  .top {
+    .el-card {
+      box-shadow: 2px 5px 5px #f1f1f1;
+      border: none;
+      border-radius: 0;
+    }
+  }
+  .demo-tabs {
+    .el-tabs__item.is-top.is-active {
+      border-bottom-color: --el-border-color-light;
+    }
+  }
+
+  .content-tree {
+    a {
+      color: var(--el-text-color-regular);
+      text-decoration: none;
+    }
+  }
+}
