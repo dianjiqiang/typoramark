@@ -23,6 +23,8 @@ import HomeContent from "./components/HomeContent";
 import { formatMarkdown } from "./utils/format";
 import useThemeStore from "./store/modules/theme";
 
+import { getHomeMutatildata } from "./service/modules/home";
+
 import type {
   folderInFileType,
   FolderType,
