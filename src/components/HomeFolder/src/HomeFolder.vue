@@ -18,9 +18,26 @@
       >
         <el-tree :data="outlineData" @node-click="handleTreeContentClick">
           <template #default="value">
-            <a :href="'#' + value.data.label" draggable="false">{{
-              value.data.label
-            }}</a>
+            <a
+              style="
+                display: inline-block;
+                width: 100%;
+                height: 26px;
+                line-height: 26px;
+              "
+              :href="
+                '#' +
+                value.data.label
+                  .toLowerCase()
+                  .replaceAll(' ', '-')
+                  .replaceAll(
+                    /(\(|\)|\[|\]|\{|\}|\||\&|amp|;|gt|\+|\-|\*|\/|)/gi,
+                    ''
+                  )
+              "
+              draggable="false"
+              v-html="value.data.label"
+            ></a>
           </template>
         </el-tree>
       </div>
@@ -64,8 +81,9 @@ const handleTreeClick = (e: FolderType) => {
   emit("handleTreeClick", e);
 };
 // 大纲树
-const handleTreeContentClick = (e: outlineType) => {
-  console.log(e);
+const HISTORY = ref(window.history);
+const handleTreeContentClick = (value: outlineType) => {
+  console.log(value);
 };
 
 // footer
@@ -73,10 +91,15 @@ const activeName = ref("文件");
 const handleClick = (tab: TabsPaneContext) => {
   activeName.value = tab.props.name as string;
 };
+
+// const format = (value: any) => {
+//   return value.;
+// };
 </script>
 
 <style scoped lang="scss">
 .home-folder {
+  min-width: 300px;
   width: 300px;
   height: 100vh;
 
@@ -91,6 +114,7 @@ const handleClick = (tab: TabsPaneContext) => {
       padding: 0 !important;
     }
     .tree {
+      overflow-y: auto;
       height: calc(100vh - 145px);
     }
   }

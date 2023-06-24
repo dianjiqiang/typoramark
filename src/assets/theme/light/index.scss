@@ -18,4 +18,165 @@ html[class="light"] {
       text-decoration: none;
     }
   }
+
+  .content {
+    pre code.hljs {
+      display: block;
+      overflow-x: auto;
+      padding: 1em;
+    }
+    code.hljs {
+      padding: 3px 5px;
+    } /*!
+      Theme: nnfx light
+      Description: a theme inspired by Netscape Navigator/Firefox
+      Author: (c) 2020-2021 Jim Mason <jmason@ibinx.com>
+      Maintainer: @RocketMan
+      License: https://creativecommons.org/licenses/by-sa/4.0  CC BY-SA 4.0
+      Updated: 2021-05-17
+    
+      @version 1.1.0
+    */
+    .hljs {
+      background: #fff;
+      color: #000;
+    }
+    .language-xml .hljs-meta,
+    .language-xml .hljs-meta-string {
+      font-weight: 700;
+      font-style: italic;
+      color: #48b;
+    }
+    .hljs-comment,
+    .hljs-quote {
+      font-style: italic;
+      color: #070;
+    }
+    .hljs-built_in,
+    .hljs-keyword,
+    .hljs-name {
+      color: #808;
+    }
+    .hljs-attr,
+    .hljs-name {
+      font-weight: 700;
+    }
+    .hljs-string {
+      font-weight: 400;
+    }
+    .hljs-code,
+    .hljs-link,
+    .hljs-meta .hljs-string,
+    .hljs-number,
+    .hljs-regexp,
+    .hljs-string {
+      color: #00f;
+    }
+    .hljs-bullet,
+    .hljs-symbol,
+    .hljs-template-variable,
+    .hljs-title,
+    .hljs-variable {
+      color: #f40;
+    }
+    .hljs-class .hljs-title,
+    .hljs-title.class_,
+    .hljs-type {
+      font-weight: 700;
+      color: #639;
+    }
+    .hljs-attr,
+    .hljs-function .hljs-title,
+    .hljs-subst,
+    .hljs-tag,
+    .hljs-title.function_ {
+      color: #000;
+    }
+    .hljs-formula {
+      background-color: #eee;
+      font-style: italic;
+    }
+    .hljs-addition {
+      background-color: #beb;
+    }
+    .hljs-deletion {
+      background-color: #fbb;
+    }
+    .hljs-meta {
+      color: #269;
+    }
+    .hljs-section,
+    .hljs-selector-class,
+    .hljs-selector-id,
+    .hljs-selector-pseudo,
+    .hljs-selector-tag {
+      font-weight: 700;
+      color: #48b;
+    }
+    .hljs-selector-pseudo {
+      font-style: italic;
+    }
+    .hljs-doctag,
+    .hljs-strong {
+      font-weight: 700;
+    }
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    p {
+      code {
+        background-color: var(--el-color-primary);
+        color: var(--el-text-color-primary);
+        margin: 0 2px;
+        font-size: 14px;
+        padding: 3px;
+        height: 20px;
+        line-height: 20px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+    }
+
+    pre {
+      position: relative;
+      background-color: #f8f8f8;
+      padding: 16px 24px;
+    }
+    blockquote {
+      background-color: #f8f8f8;
+    }
+
+    ul {
+      padding-top: 10px;
+      li {
+        padding: 10px;
+        p {
+          margin: 0 !important;
+          padding: 0;
+          line-height: auto;
+        }
+      }
+
+      li::marker {
+        color: #f47296;
+      }
+    }
+
+    ol {
+      padding-top: 10px;
+      li {
+        padding: 10px;
+        p {
+          margin: 0 !important;
+          padding: 0;
+          line-height: auto;
+        }
+      }
+
+      li::marker {
+        color: #f47296;
+      }
+    }
+  }
 }

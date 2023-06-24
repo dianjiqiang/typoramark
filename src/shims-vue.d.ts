@@ -5,4 +5,4 @@ declare module "*.vue" {
   export default component;
 }
 
-declare function defineProps() {};
+declare module "*.md";

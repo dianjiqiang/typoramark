@@ -105,7 +105,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 const mainButton = ref();
 // var mainButton.value = document.querySelector(".main-button"); //获取按钮主体
 const daytimeBackgrond = ref<any>([]);
@@ -120,7 +120,35 @@ const moon = ref<any>([]);
 // var moon = document.getElementsByClassName("moon"); //获取陨石坑
 const stars = ref();
 // var stars = document.querySelector(".stars"); //获取所有星星
-let isMoved = false; //按钮状态，判断是否白天黑夜,默认为白天
+let isMoved = ref<boolean>(false);
+nextTick(() => {
+  if (window.localStorage.getItem("themeData") === "dark") {
+    isMoved.value = true;
+
+    //黑夜按钮样式
+    mainButton.value.style.transform = "translateX(110px)"; //水平平移距离为110px
+    mainButton.value.style.backgroundColor = "rgba(195, 200,210,1)"; //按钮主体的背景颜色变为黄色(月亮)
+    // 盒子阴影
+    mainButton.value.style.boxShadow =
+      "3px 3px 5px rgba(0, 0, 0, 0.5), inset  -3px -5px 3px -3px rgba(0, 0, 0, 0.5), inset  4px 5px 2px -2px rgba(255, 255, 210,1)";
+    //云朵下降-云朵隐藏
+    daytimeBackgrond.value[0].style.transform = "translateX(110px)";
+    daytimeBackgrond.value[1].style.transform = "translateX(80px)";
+    daytimeBackgrond.value[2].style.transform = "translateX(50px)";
+    cloud.value.style.transform = "translateY(80px)";
+    cloudLight.value.style.transform = "translateY(80px)";
+    components.value.style.backgroundColor = "rgba(25,30,50,1)";
+    //月亮陨石坑完全不透明-显示
+    moon.value[0].style.opacity = "1";
+    moon.value[1].style.opacity = "1";
+    moon.value[2].style.opacity = "1";
+    //星星下降-星星显示
+    stars.value.style.transform = "translateY(-62.5px)";
+    stars.value.style.opacity = "1";
+  } else {
+    isMoved.value = false;
+  } //按钮状态，判断是否白天黑夜,默认为白天
+});
 
 const setdaytimeBackgrond = (el: any) => {
   daytimeBackgrond.value.push(el);
@@ -132,7 +160,7 @@ const setmoon = (el: any) => {
 
 window.onload = function () {
   mainButton.value.addEventListener("click", function () {
-    if (isMoved) {
+    if (isMoved.value) {
       //白天按钮样式
       mainButton.value.style.transform = "translateX(0)"; //水平平移距离为0px
       mainButton.value.style.backgroundColor = "rgba(255, 195, 35,1)"; //按钮主体的背景颜色变为黄色(太阳)
@@ -155,6 +183,7 @@ window.onload = function () {
       stars.value.style.opacity = "0";
       document.documentElement.classList.remove("dark");
       document.documentElement.classList.add("light");
+      window.localStorage.setItem("themeData", "light");
     } else {
       //黑夜按钮样式
       mainButton.value.style.transform = "translateX(110px)"; //水平平移距离为110px
@@ -178,9 +207,10 @@ window.onload = function () {
       stars.value.style.opacity = "1";
       document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
+      window.localStorage.setItem("themeData", "dark");
     }
 
-    isMoved = !isMoved;
+    isMoved.value = !isMoved.value;
   });
 };
 </script>

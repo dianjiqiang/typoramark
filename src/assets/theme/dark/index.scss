@@ -1,10 +1,14 @@
 html[class="dark"] {
+  background-color: #1e293b;
   .top {
     .el-card {
-      box-shadow: 2px 5px 5px #0c0c0c;
-      border: none;
+      border-bottom: 1px solid #141b27;
       border-radius: 0;
     }
+  }
+
+  .el-card {
+    background-color: #1e293b;
   }
 
   .demo-tabs {
@@ -17,6 +21,163 @@ html[class="dark"] {
     a {
       color: var(--el-text-color-regular);
       text-decoration: none;
+    }
+  }
+
+  .content {
+    background-color: #1e293b;
+    pre code.hljs {
+      display: block;
+      overflow-x: auto;
+      padding: 1em;
+    }
+    code.hljs {
+      padding: 3px 5px;
+    } /*!
+      Theme: StackOverflow Dark
+      Description: Dark theme as used on stackoverflow.com
+      Author: stackoverflow.com
+      Maintainer: @Hirse
+      Website: https://github.com/StackExchange/Stacks
+      License: MIT
+      Updated: 2021-05-15
+    
+      Updated for @stackoverflow/stacks v0.64.0
+      Code Blocks: /blob/v0.64.0/lib/css/components/_stacks-code-blocks.less
+      Colors: /blob/v0.64.0/lib/css/exports/_stacks-constants-colors.less
+    */
+    .hljs {
+      color: #fff;
+      background: #1c1b1b;
+    }
+    .hljs-subst {
+      color: #fff;
+    }
+    .hljs-comment {
+      color: #999;
+    }
+    .hljs-attr,
+    .hljs-doctag,
+    .hljs-keyword,
+    .hljs-meta .hljs-keyword,
+    .hljs-section,
+    .hljs-selector-tag {
+      color: #88aece;
+    }
+    .hljs-attribute {
+      color: #c59bc1;
+    }
+    .hljs-name,
+    .hljs-number,
+    .hljs-quote,
+    .hljs-selector-id,
+    .hljs-template-tag,
+    .hljs-type {
+      color: #f08d49;
+    }
+    .hljs-selector-class {
+      color: #88aece;
+    }
+    .hljs-link,
+    .hljs-regexp,
+    .hljs-selector-attr,
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-template-variable,
+    .hljs-variable {
+      color: #b5bd68;
+    }
+    .hljs-meta,
+    .hljs-selector-pseudo {
+      color: #88aece;
+    }
+    .hljs-built_in,
+    .hljs-literal,
+    .hljs-title {
+      color: #f08d49;
+    }
+    .hljs-bullet,
+    .hljs-code {
+      color: #ccc;
+    }
+    .hljs-meta .hljs-string {
+      color: #b5bd68;
+    }
+    .hljs-deletion {
+      color: #de7176;
+    }
+    .hljs-addition {
+      color: #76c490;
+    }
+    .hljs-emphasis {
+      font-style: italic;
+    }
+    .hljs-strong {
+      font-weight: 700;
+    }
+
+    p {
+      code {
+        background-color: rgba($color: red, $alpha: 0.1);
+        color: rgba($color: red, $alpha: 1);
+        font-weight: 700;
+        margin: 0 2px;
+        font-size: 14px;
+        padding: 3px;
+        height: 20px;
+        line-height: 20px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+    }
+    pre {
+      position: relative;
+      background-color: #0f172a;
+      padding: 16px 24px;
+    }
+
+    blockquote {
+      background-color: #0f172a;
+    }
+
+    table {
+      tbody {
+        tr:nth-child(2n) {
+          background-color: rgba($color: #0f172a, $alpha: 0.5);
+        }
+      }
+    }
+
+    ul {
+      padding-top: 10px;
+      li {
+        padding: 10px;
+        p {
+          margin: 0 !important;
+          padding: 0;
+          line-height: auto;
+        }
+      }
+
+      li::marker {
+        color: #f47296;
+      }
+    }
+
+    ol {
+      padding-top: 10px;
+      li {
+        padding: 10px;
+        p {
+          margin: 0 !important;
+          padding: 0;
+          line-height: auto;
+        }
+      }
+
+      li::marker {
+        color: #f47296;
+      }
     }
   }
 }
