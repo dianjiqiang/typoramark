@@ -34,7 +34,7 @@ import { ref } from "vue";
 withDefaults(
   defineProps<{
     fileTitle: string;
-    fileData: any;
+    fileData: string;
   }>(),
   {
     fileTitle: "请先选择文件",

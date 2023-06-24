@@ -23,8 +23,6 @@ import HomeContent from "./components/HomeContent";
 import { formatMarkdown } from "./utils/format";
 import useThemeStore from "./store/modules/theme";
 
-import { getHomeMutatildata } from "./service/modules/home";
-
 import type {
   folderInFileType,
   FolderType,
@@ -69,39 +67,16 @@ onMounted(async () => {
 // 树点击
 const outlineData = ref<outlineType[]>([]);
 const fileTitle = ref<string>();
-let fileData = ref<any>("");
+let fileData = ref<string>("");
 const handleTreeClick = (e: FolderType) => {
   const path = e.path;
   fileTitle.value = e.label;
   // 拿着path或者id 去 dispatch 发送请求 获取大纲数据
   console.log(path);
-  // 获取到对应的大纲信息和详细内容
-  // outlineData.value = [
-  //   {
-  //     id: "1",
-  //     label: "标题1",
-  //     type: 1, // 一级标题
-  //     children: [
-  //       {
-  //         id: "2",
-  //         label: "标题1-1",
-  //         type: 2, // 一级标题
-  //         children: [
-  //           {
-  //             id: "2",
-  //             label: "标题1-1-1",
-  //             type: 3, // 一级标题
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  // ];
   // 获取到详细内容后 返回
   import("./JS高级.md").then((res) => {
-    fileData.value = res;
-    outlineData.value = formatMarkdown(fileData.value.default);
-    fileData.value = fileData.value.default;
+    outlineData.value = formatMarkdown(res.default);
+    fileData.value = res.default;
   });
 };
 
