@@ -32,7 +32,7 @@
     width: 50%;
   }
   .el-tabs__item.is-top.is-active {
-    border-bottom-color: --el-border-color-light;
+    border-bottom-color: var(--el-border-color-light);
   }
 }
 
