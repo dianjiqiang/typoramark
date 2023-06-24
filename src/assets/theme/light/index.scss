@@ -18,6 +18,9 @@ html[class="light"] {
       text-decoration: none;
     }
   }
+  pre > code {
+    font-family: "fira code";
+  }
 
   .content {
     pre code.hljs {

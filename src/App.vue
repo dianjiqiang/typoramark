@@ -12,6 +12,7 @@
       @handleClickHidden="handleClickHidden"
       :fileData="fileData"
     />
+    <UtilsComponents />
   </div>
 </template>
 
@@ -22,6 +23,7 @@ import HomeFolder from "./components/HomeFolder";
 import HomeContent from "./components/HomeContent";
 import { formatMarkdown } from "./utils/format";
 import useThemeStore from "./store/modules/theme";
+import UtilsComponents from "./components/UtilsComponents";
 
 import type {
   folderInFileType,

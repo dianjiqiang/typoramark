@@ -24,6 +24,10 @@ html[class="dark"] {
     }
   }
 
+  .el-drawer__body {
+    background-color: #1e293b;
+  }
+
   .content {
     background-color: #1e293b;
     pre code.hljs {
@@ -46,6 +50,9 @@ html[class="dark"] {
       Code Blocks: /blob/v0.64.0/lib/css/components/_stacks-code-blocks.less
       Colors: /blob/v0.64.0/lib/css/exports/_stacks-constants-colors.less
     */
+    pre > code {
+      font-family: "fira code";
+    }
     .hljs {
       color: #fff;
       background: #1c1b1b;
