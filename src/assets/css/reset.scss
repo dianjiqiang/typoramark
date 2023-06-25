@@ -9,3 +9,21 @@ body {
 .el-card {
   box-sizing: border-box;
 }
+
+.hy-editor {
+  padding: 0 !important;
+  border: none;
+}
+.w-e-toolbar {
+  display: none;
+}
+
+.w-e-text-container {
+  padding: 0 !important;
+  border: none !important;
+  overflow-x: hidden !important;
+}
+
+blockquote {
+  border: none !important;
+}

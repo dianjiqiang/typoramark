@@ -16,5 +16,6 @@ declare module 'vue' {
     HomeFolder: typeof import('./src/components/HomeFolder/src/HomeFolder.vue')['default']
     ThemeButton: typeof import('./src/components/ThemeButton/src/ThemeButton.vue')['default']
     UtilsComponents: typeof import('./src/components/UtilsComponents/src/UtilsComponents.vue')['default']
+    WangEditor: typeof import('./src/components/WangEditor/src/WangEditor.vue')['default']
   }
 }

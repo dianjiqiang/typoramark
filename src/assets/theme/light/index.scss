@@ -11,6 +11,10 @@ html[class="light"] {
       border-bottom-color: var(--el-border-color-light);
     }
   }
+  .el-card {
+    position: relative;
+    z-index: 3;
+  }
 
   .content-tree {
     a {
@@ -27,6 +31,10 @@ html[class="light"] {
       display: block;
       overflow-x: auto;
       padding: 1em;
+    }
+
+    pre {
+      padding: 5px !important;
     }
     code.hljs {
       padding: 3px 5px;
@@ -143,7 +151,6 @@ html[class="light"] {
 
     pre {
       position: relative;
-      background-color: #f8f8f8;
       padding: 16px 24px;
     }
     blockquote {

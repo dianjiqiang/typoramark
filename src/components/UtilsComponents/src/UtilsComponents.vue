@@ -25,6 +25,7 @@ const isShowSettingForm = () => {
 <style scoped lang="scss">
 .utils-components {
   position: fixed;
+  z-index: 9999;
   right: 30px;
   bottom: 20px;
   img {

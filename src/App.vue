@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 
 import HomeFolder from "./components/HomeFolder";
 import HomeContent from "./components/HomeContent";
@@ -85,6 +85,20 @@ const handleTreeClick = (e: FolderType) => {
 // 获取主题
 const themeStore = useThemeStore();
 themeStore.initializeThemeData();
+
+// 进入 取消捕获 ctrl+s
+const keydownFn = (event: KeyboardEvent) => {
+  if (event.ctrlKey && event.key === "s") {
+    event.preventDefault();
+  }
+};
+onMounted(() => {
+  window.addEventListener("keydown", keydownFn);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", keydownFn);
+});
 </script>
 
 <style scoped lang="scss">

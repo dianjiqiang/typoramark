@@ -7,6 +7,10 @@ html[class="dark"] {
     }
   }
 
+  .w-e-text {
+    background-color: #1e293b;
+  }
+
   .el-card {
     background-color: #1e293b;
   }
@@ -34,6 +38,12 @@ html[class="dark"] {
       display: block;
       overflow-x: auto;
       padding: 1em;
+    }
+    pre code {
+      background: none;
+    }
+    pre {
+      padding: 5px !important;
     }
     code.hljs {
       padding: 3px 5px;

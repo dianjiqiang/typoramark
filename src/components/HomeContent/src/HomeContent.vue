@@ -23,15 +23,17 @@
       </el-card>
     </div>
     <div class="content">
-      <div v-html="fileData"></div>
+      <div ref="editorRef" class="yxxfd-editor" @keydown="changeKeyDown"></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import type Editor from "wangeditor";
+import WangEditor from "wangeditor";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     fileTitle: string;
     fileData: string;
@@ -54,6 +56,40 @@ const openMenu = (e: boolean) => {
   }
   emit("handleClickHidden", e);
 };
+
+// 富文本编辑区域
+const instance = ref<Editor | null>(null);
+const editorRef = ref<HTMLDivElement | null>(null);
+let editValue = "";
+watch(
+  () => props.fileData,
+  (newValue) => {
+    instance.value = new WangEditor(editorRef.value);
+    if (!instance.value) return;
+    const editor: Editor = instance.value as Editor;
+    editor.config.height = "100vh - 160px";
+    editor.config.zIndex = 1;
+    editor.config.onchange = function (newHtml: string) {
+      editValue = newHtml;
+    };
+    editor.config.menus = [];
+    instance.value.create();
+    initEditorContent(newValue);
+  }
+);
+
+const initEditorContent = (htmlStr: string, isFocus = false) => {
+  if (!instance.value) return;
+  const editor: Editor = instance.value as Editor;
+  editor.config.focus = isFocus;
+  editor.txt.html(htmlStr);
+};
+
+const changeKeyDown = (event: KeyboardEvent) => {
+  if (event.ctrlKey && event.key === "s") {
+    initEditorContent(editValue);
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -72,6 +108,10 @@ const openMenu = (e: boolean) => {
   }
   .icon {
     display: flex;
+  }
+
+  .yxxfd-editor {
+    text-align: left;
   }
 }
 </style>
