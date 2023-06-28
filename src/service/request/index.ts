@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance } from "axios";
 import type { KeyieRequestConfig } from "./../type/index";
 
 class KeyieRequest {
@@ -13,7 +13,7 @@ class KeyieRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // 给每个响应头加上token
-        config.data = { token: "xxx" };
+        config.data = { ...config.data, token: "xxx" };
 
         console.log("请求成功的拦截");
         return config;
@@ -52,6 +52,7 @@ class KeyieRequest {
     if (config.interceptors?.onFulfilled) {
       config = config.interceptors.onFulfilled(config);
     }
+
     return new Promise<T>((resolve, reject) => {
       this.instance
         // 我们这里 request本身都是具有两个泛型的 我们应该是要改变第二个泛型
@@ -76,6 +77,15 @@ class KeyieRequest {
   }
   patch<T = any>(config: KeyieRequestConfig<T>) {
     return this.request({ ...config, method: "PATCH" });
+  }
+  file<T = any>(config: KeyieRequestConfig<T>) {
+    return this.request({
+      ...config,
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data;charset=UTF-8",
+      },
+    });
   }
 }
 

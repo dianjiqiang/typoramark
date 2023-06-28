@@ -1,4 +1,8 @@
-import type { outlineType } from "@/store/modules/file";
+import type {
+  outlineType,
+  folderInFileType,
+  FileType,
+} from "@/store/modules/file";
 
 export const formatMarkdown = (str: string) => {
   const reg = /<(h1|h2|h3|h4)[^>]*>(.*?)<(\/h1|\/h2|\/h3|\/h4)>/gi;
@@ -87,4 +91,22 @@ export const formatMarkdown = (str: string) => {
   }
 
   return newTree;
+};
+
+export const findFiles = (tree: folderInFileType) => {
+  const newArray: FileType[] = [];
+  tree.forEach((item) => {
+    if (item.type === "file") {
+      newArray.push(item);
+    } else {
+      if (item.children.length) {
+        item.children.forEach((item) => {
+          if (item.type === "file") {
+            newArray.push(item);
+          }
+        });
+      }
+    }
+  });
+  return newArray;
 };

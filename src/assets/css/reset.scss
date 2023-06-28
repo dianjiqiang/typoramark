@@ -27,3 +27,7 @@ body {
 blockquote {
   border: none !important;
 }
+
+.el-popper.is-pure {
+  z-index: 9999 !important;
+}

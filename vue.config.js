@@ -68,7 +68,11 @@ module.exports = defineConfig({
       ],
     },
     plugins: [
+      require("unplugin-element-plus/webpack")(),
       AutoImport({
+        eslintrc: {
+          enabled: true,
+        },
         resolvers: [ElementPlusResolver()],
       }),
       Components({

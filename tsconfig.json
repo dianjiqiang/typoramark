@@ -35,6 +35,9 @@
     "tests/**/*.tsx",
     "custom-types.d.ts"  ],
   "exclude": [
-    "node_modules"
-  ]
+    "node_modules",
+  ],
+  "rules":{
+    "@typescript-eslint/ban-ts-comment": "off",
+  }
 }

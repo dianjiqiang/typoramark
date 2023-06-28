@@ -12,7 +12,10 @@
       @handleClickHidden="handleClickHidden"
       :fileData="fileData"
     />
-    <UtilsComponents />
+    <UtilsComponents
+      @createSuccessFolder="createSuccessFolder"
+      :folderData="folderData"
+    />
   </div>
 </template>
 
@@ -77,6 +80,12 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("keydown", keydownFn);
 });
+
+// 创建文件夹
+const createSuccessFolder = async () => {
+  const res = await getFileTree();
+  folderData.value = res.data;
+};
 </script>
 
 <style scoped lang="scss">
