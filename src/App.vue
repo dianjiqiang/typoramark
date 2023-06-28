@@ -35,6 +35,9 @@ import type {
   outlineType,
 } from "./store/modules/file";
 
+// 逆向解析
+const converter = new showdown.Converter();
+
 // 点击了隐藏menu
 const isHidden = ref(false);
 const handleClickHidden = (e: boolean) => {
@@ -59,6 +62,8 @@ const handleTreeClick = (e: FolderType) => {
     getHomeMdFile(e.name).then((res) => {
       outlineData.value = formatMarkdown(res.data.content);
       fileData.value = res.data.content;
+      // 逆向解析
+      console.log(converter.makeMarkdown(res.data.content));
     });
   }
 };

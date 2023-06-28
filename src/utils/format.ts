@@ -45,9 +45,9 @@ export const formatMarkdown = (str: string) => {
         children: [],
       };
       const c1 = newTree[newTree.length - 1].children;
-      if (c1) {
-        const c2 = c1[c1.length - 1].children;
-        if (c2) {
+      if (c1?.length) {
+        const c2 = c1?.[c1.length - 1]?.children;
+        if (c2?.length) {
           c2?.push(newChild);
         } else {
           c1[c1.length - 1].children = [newChild];
@@ -68,11 +68,11 @@ export const formatMarkdown = (str: string) => {
         children: [],
       };
       const c1 = newTree[newTree.length - 1].children;
-      if (c1) {
-        const c2 = c1[c1.length - 1].children;
-        if (c2) {
+      if (c1?.length) {
+        const c2 = c1?.[c1.length - 1]?.children;
+        if (c2?.length) {
           const c3 = c2[c2.length - 1].children;
-          if (c3) {
+          if (c3?.length) {
             c3?.push(newChild);
           } else {
             c2[c2.length - 1].children = [newChild];

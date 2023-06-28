@@ -1,5 +1,6 @@
 const { defineConfig } = require("@vue/cli-service");
 const AutoImport = require("unplugin-auto-import/webpack");
+const { ProvidePlugin } = require("webpack");
 const Components = require("unplugin-vue-components/webpack");
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const hljs = require("highlight.js");
@@ -77,6 +78,9 @@ module.exports = defineConfig({
       }),
       Components({
         resolvers: [ElementPlusResolver()],
+      }),
+      new ProvidePlugin({
+        dayjs: "showdown",
       }),
     ],
   },
