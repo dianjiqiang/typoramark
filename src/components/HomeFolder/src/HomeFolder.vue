@@ -31,7 +31,7 @@
                   .toLowerCase()
                   .replaceAll(' ', '-')
                   .replaceAll(
-                    /(\(|\)|\[|\]|\{|\}|\||\&|amp|;|gt|\+|\-|\*|\/|)/gi,
+                    /(\(|\)|\[|\]|\{|\}|\||\&|amp|;|gt|\+|\*|\/|\.|)/gi,
                     ''
                   )
               "
@@ -81,7 +81,6 @@ const handleTreeClick = (e: FolderType) => {
   emit("handleTreeClick", e);
 };
 // 大纲树
-const HISTORY = ref(window.history);
 const handleTreeContentClick = (value: outlineType) => {
   console.log(value);
 };

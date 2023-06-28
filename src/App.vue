@@ -24,6 +24,7 @@ import HomeContent from "./components/HomeContent";
 import { formatMarkdown } from "./utils/format";
 import useThemeStore from "./store/modules/theme";
 import UtilsComponents from "./components/UtilsComponents";
+import { getHomeMdFile, getFileTree } from "./service";
 
 import type {
   folderInFileType,
@@ -41,45 +42,22 @@ const folderData = ref<folderInFileType>([]); // 这里不是采用ref定义的 
 onMounted(async () => {
   // 1. dispatch vuex 获取 Folder 数据
   // 2. 将数据传递到组件中
-  const res: folderInFileType = [
-    {
-      id: "1",
-      label: "文件夹1",
-      path: "/wenjianjia1",
-      type: 0,
-      children: [
-        {
-          id: "2",
-          label: "js入门",
-          path: "/wenjianjia1/jsrumen.md",
-          type: 1,
-        },
-        {
-          id: "3",
-          label: "js进阶",
-          path: "/wenjianjia1/jsjinjie.md",
-          type: 1,
-        },
-      ],
-    },
-  ] as folderInFileType;
-  folderData.value = res;
-  console.log(folderData.value);
+  const res = await getFileTree();
+  folderData.value = res.data;
 });
 // 树点击
 const outlineData = ref<outlineType[]>([]);
 const fileTitle = ref<string>();
 let fileData = ref<string>("");
 const handleTreeClick = (e: FolderType) => {
-  const path = e.path;
-  fileTitle.value = e.label;
-  // 拿着path或者id 去 dispatch 发送请求 获取大纲数据
-  console.log(path);
-  // 获取到详细内容后 返回
-  import("./JS高级.md").then((res) => {
-    outlineData.value = formatMarkdown(res.default);
-    fileData.value = res.default;
-  });
+  if (e.type === "file") {
+    fileTitle.value = e.label;
+    // 获取到详细内容后 返回
+    getHomeMdFile(e.name).then((res) => {
+      outlineData.value = formatMarkdown(res.data.content);
+      fileData.value = res.data.content;
+    });
+  }
 };
 
 // 获取主题

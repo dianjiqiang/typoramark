@@ -133,7 +133,15 @@ html[class="dark"] {
       font-weight: 700;
     }
 
-    p {
+    p,
+    li,
+    ol,
+    ul,
+    h1,
+    h2,
+    h3,
+    h4,
+    td {
       code {
         background-color: rgba($color: red, $alpha: 0.1);
         color: rgba($color: red, $alpha: 1);

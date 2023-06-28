@@ -64,17 +64,22 @@ let editValue = "";
 watch(
   () => props.fileData,
   (newValue) => {
-    instance.value = new WangEditor(editorRef.value);
-    if (!instance.value) return;
-    const editor: Editor = instance.value as Editor;
-    editor.config.height = "100vh - 160px";
-    editor.config.zIndex = 1;
-    editor.config.onchange = function (newHtml: string) {
-      editValue = newHtml;
-    };
-    editor.config.menus = [];
-    instance.value.create();
-    initEditorContent(newValue);
+    if (instance.value) {
+      instance.value.destroy();
+    }
+    setTimeout(() => {
+      instance.value = new WangEditor(editorRef.value);
+      if (!instance.value) return;
+      const editor: Editor = instance.value as Editor;
+      editor.config.height = "100vh - 160px";
+      editor.config.zIndex = 1;
+      editor.config.onchange = function (newHtml: string) {
+        editValue = newHtml;
+      };
+      editor.config.menus = [];
+      instance.value.create();
+      initEditorContent(newValue);
+    });
   }
 );
 

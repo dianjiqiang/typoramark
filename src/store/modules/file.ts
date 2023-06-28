@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export type FileType = {
   label: string;
   id: string;
-  type: number;
+  type: string;
   path: string;
 };
 
@@ -11,7 +11,8 @@ export type FolderType = {
   id: string;
   label: string;
   path: string;
-  type: number;
+  name: string;
+  type: string;
   children: FileType[];
 };
 
