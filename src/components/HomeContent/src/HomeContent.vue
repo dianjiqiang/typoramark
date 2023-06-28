@@ -32,6 +32,10 @@
 import { ref, watch } from "vue";
 import type Editor from "wangeditor";
 import WangEditor from "wangeditor";
+import { clearCodeInspan } from "@/utils/format";
+
+// 逆向解析
+const converter = new showdown.Converter();
 
 const props = withDefaults(
   defineProps<{
@@ -92,7 +96,11 @@ const initEditorContent = (htmlStr: string, isFocus = false) => {
 
 const changeKeyDown = (event: KeyboardEvent) => {
   if (event.ctrlKey && event.key === "s") {
-    initEditorContent(editValue);
+    // console.log(clearCodeInspan(editValue));
+    const mdContent = converter.makeMarkdown(editValue);
+    const newMdContent = clearCodeInspan(mdContent);
+
+    console.log(newMdContent);
   }
 };
 </script>
