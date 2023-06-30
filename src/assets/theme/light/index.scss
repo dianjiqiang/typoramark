@@ -33,9 +33,6 @@ html[class="light"] {
       padding: 1em;
     }
 
-    pre {
-      padding: 5px !important;
-    }
     code.hljs {
       padding: 3px 5px;
     } /*!
@@ -51,6 +48,12 @@ html[class="light"] {
     .hljs {
       background: #fff;
       color: #000;
+    }
+
+    pre {
+      position: relative;
+      background-color: #eeeeee;
+      padding: 16px 24px;
     }
     .language-xml .hljs-meta,
     .language-xml .hljs-meta-string {

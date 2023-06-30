@@ -11,6 +11,10 @@
       :fileTitle="fileTitle"
       @handleClickHidden="handleClickHidden"
       :fileData="fileData"
+      :fileRawData="fileRawData"
+      :isEdit="isEdit"
+      :fileId="fileId"
+      @SaveKeydown="SaveKeydown"
     />
     <UtilsComponents
       @createSuccessFolder="createSuccessFolder"
@@ -43,21 +47,23 @@ const handleClickHidden = (e: boolean) => {
 
 const folderData = ref<folderInFileType>([]); // 这里不是采用ref定义的  应该是 storeToRefs 这里懒了, 就写伪代码
 onMounted(async () => {
-  // 1. dispatch vuex 获取 Folder 数据
-  // 2. 将数据传递到组件中
   const res = await getFileTree();
   folderData.value = res.data;
 });
 // 树点击
 const outlineData = ref<outlineType[]>([]);
 const fileTitle = ref<string>();
+const fileRawData = ref<string>();
+const fileId = ref<string>();
 let fileData = ref<string>("");
 const handleTreeClick = (e: FolderType) => {
   if (e.type === "file") {
     fileTitle.value = e.label;
+    fileId.value = e.id;
     // 获取到详细内容后 返回
     getHomeMdFile(e.name).then((res) => {
       outlineData.value = formatMarkdown(res.data.content);
+      fileRawData.value = res.data.raw;
       fileData.value = res.data.content;
     });
   }
@@ -67,10 +73,14 @@ const handleTreeClick = (e: FolderType) => {
 const themeStore = useThemeStore();
 themeStore.initializeThemeData();
 
-// 进入 取消捕获 ctrl+s
+// 进入 取消捕获 ctrl+s  进入 开始捕获编辑模式
+const isEdit = ref<boolean>(false);
 const keydownFn = (event: KeyboardEvent) => {
   if (event.ctrlKey && event.key === "s") {
     event.preventDefault();
+  } else if (event.ctrlKey && event.key === "/") {
+    // 开启编辑模式
+    isEdit.value = !isEdit.value;
   }
 };
 onMounted(() => {
@@ -85,6 +95,11 @@ onUnmounted(() => {
 const createSuccessFolder = async () => {
   const res = await getFileTree();
   folderData.value = res.data;
+};
+
+// 子组件保存文件
+const SaveKeydown = (value: string) => {
+  fileData.value = value;
 };
 </script>
 

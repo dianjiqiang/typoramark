@@ -80,7 +80,8 @@ module.exports = defineConfig({
         resolvers: [ElementPlusResolver()],
       }),
       new ProvidePlugin({
-        dayjs: "showdown",
+        // showdown: "showdown",
+        // SimpleMDE: "SimpleMDE",
       }),
     ],
   },

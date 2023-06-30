@@ -163,3 +163,13 @@ body {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(129, 137, 160, 0.4);
 }
+
+.edit-content {
+  .CodeMirror {
+    height: calc(100vh - 120px);
+  }
+
+  .cm-spell-error {
+    background-color: transparent !important;
+  }
+}

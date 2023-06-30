@@ -22,32 +22,35 @@
         </div>
       </el-card>
     </div>
-    <div class="content">
-      <div ref="editorRef" class="yxxfd-editor" @keydown="changeKeyDown"></div>
+    <div class="content" v-show="!isEdit" v-html="fileData"></div>
+    <div class="edit-content" style="overflow: hidden" @keydown="changeKeyDown">
+      <textarea v-show="!isEdit" ref="editorRef"> </textarea>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import type Editor from "wangeditor";
-import WangEditor from "wangeditor";
-import { clearCodeInspan } from "@/utils/format";
+import { ref, watch, nextTick } from "vue";
 
-// 逆向解析
-const converter = new showdown.Converter();
+import { saveEditMarkdown } from "@/service";
 
 const props = withDefaults(
   defineProps<{
     fileTitle: string;
     fileData: string;
+    fileRawData: string;
+    isEdit: boolean;
+    fileId: string;
   }>(),
   {
     fileTitle: "请先选择文件",
     fileData: "",
+    fileRawData: "",
+    isEdit: false,
+    fileId: "",
   }
 );
-const emit = defineEmits(["handleClickHidden"]);
+const emit = defineEmits(["handleClickHidden", "SaveKeydown"]);
 const isHiddenMenu = ref(false);
 const width = ref("calc(100vw - 303px)");
 
@@ -62,45 +65,36 @@ const openMenu = (e: boolean) => {
 };
 
 // 富文本编辑区域
-const instance = ref<Editor | null>(null);
 const editorRef = ref<HTMLDivElement | null>(null);
-let editValue = "";
+let simplemde: any;
+nextTick(() => {
+  simplemde = new SimpleMDE({
+    element: editorRef.value,
+  });
+});
+
 watch(
-  () => props.fileData,
+  () => props.fileRawData,
   (newValue) => {
-    if (instance.value) {
-      instance.value.destroy();
+    if (simplemde) {
+      simplemde.value(newValue);
     }
-    setTimeout(() => {
-      instance.value = new WangEditor(editorRef.value);
-      if (!instance.value) return;
-      const editor: Editor = instance.value as Editor;
-      editor.config.height = "100vh - 160px";
-      editor.config.zIndex = 1;
-      editor.config.onchange = function (newHtml: string) {
-        editValue = newHtml;
-      };
-      editor.config.menus = [];
-      instance.value.create();
-      initEditorContent(newValue);
-    });
   }
 );
 
-const initEditorContent = (htmlStr: string, isFocus = false) => {
-  if (!instance.value) return;
-  const editor: Editor = instance.value as Editor;
-  editor.config.focus = isFocus;
-  editor.txt.html(htmlStr);
-};
-
 const changeKeyDown = (event: KeyboardEvent) => {
-  if (event.ctrlKey && event.key === "s") {
-    // console.log(clearCodeInspan(editValue));
-    const mdContent = converter.makeMarkdown(editValue);
-    const newMdContent = clearCodeInspan(mdContent);
+  if (event.ctrlKey && event.key === "s" && props.isEdit && props.fileId) {
+    saveEditMarkdown({ text: simplemde.value(), id: props.fileId }).then(
+      (res) => {
+        if (res.msg) {
+          ElMessage(res.msg);
+        } else {
+          emit("SaveKeydown", res.data);
 
-    console.log(newMdContent);
+          ElMessage.success("文件保存成功");
+        }
+      }
+    );
   }
 };
 </script>

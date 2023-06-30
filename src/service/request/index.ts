@@ -13,8 +13,6 @@ class KeyieRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // 给每个响应头加上token
-        config.data = { ...config.data, token: "xxx" };
-
         console.log("请求成功的拦截");
         return config;
       },
@@ -26,7 +24,6 @@ class KeyieRequest {
     // 全局结果拦截器
     this.instance.interceptors.response.use(
       (res) => {
-        console.log("响应成功的拦截");
         return res.data;
       },
       (err) => {
@@ -47,7 +44,7 @@ class KeyieRequest {
   }
 
   // 封装网络请求的方法
-  request<T = any>(config: KeyieRequestConfig<T>) {
+  request<T = any>(config: KeyieRequestConfig<T>, flag?: string) {
     // 自己在这里进行深层定制 单次请求拦截
     if (config.interceptors?.onFulfilled) {
       config = config.interceptors.onFulfilled(config);
@@ -57,7 +54,7 @@ class KeyieRequest {
       this.instance
         // 我们这里 request本身都是具有两个泛型的 我们应该是要改变第二个泛型
         .request<any, T>(config)
-        .then((res) => {
+        .then((res: any) => {
           if (config.interceptors?.onFulfilledRes) {
             res = config.interceptors.onFulfilledRes(res);
           }
@@ -86,6 +83,9 @@ class KeyieRequest {
         "Content-Type": "multipart/form-data;charset=UTF-8",
       },
     });
+  }
+  put<T = any>(config: KeyieRequestConfig<T>) {
+    return this.request({ ...config, method: "PUT" });
   }
 }
 

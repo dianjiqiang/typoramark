@@ -99,3 +99,13 @@ export function renameMarkDownFile(data: { id: string; newFileName: string }) {
     },
   });
 }
+
+// 保存markdown文件
+export function saveEditMarkdown(data: { id: string; text: string }) {
+  return keyieRequest.put({
+    url: "/markdown/modify/" + data.id,
+    data: {
+      content: data.text,
+    },
+  });
+}

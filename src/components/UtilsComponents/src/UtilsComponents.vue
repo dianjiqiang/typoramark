@@ -118,19 +118,23 @@
         </el-select>
       </label>
       <div style="display: flex; justify-content: center">
-        <el-button
-          @click="handleDownLoadMarkDown"
-          type="primary"
-          style="margin-top: 20px; width: 300px"
-          size="large"
-          >下载</el-button
+        <a
+          :href="'http://www.meant.cc:11235/markdown/' + downloadMarkDownFileId"
+          target="_blank"
         >
+          <el-button
+            type="primary"
+            style="margin-top: 20px; width: 300px"
+            size="large"
+            >下载</el-button
+          >
+        </a>
       </div>
 
       <h3>删除Markdown文件</h3>
       <label class="flex">
         <span class="label">请选择文件: </span>
-        <el-select v-model="deleteMarkDownFileId" placeholder="请选择文件夹">
+        <el-select v-model="deleteMarkDownFileId" placeholder="请选择文件">
           <el-option
             v-for="(item, index) in fileValue"
             :key="index"
@@ -152,7 +156,7 @@
       <h3>重命名markdown文件</h3>
       <label class="flex">
         <span class="label">请选择文件: </span>
-        <el-select v-model="renameFileId" placeholder="请选择文件夹">
+        <el-select v-model="renameFileId" placeholder="请选择文件">
           <el-option
             v-for="(item, index) in fileValue"
             :key="index"
@@ -268,7 +272,7 @@ const uploadFile = () => {
         folderName.value = "";
         return;
       } else {
-        ElMessage.success("创建文件夹成功");
+        ElMessage.success("上传文件成功");
         setTimeout(() => {
           emit("createSuccessFolder");
         }, 1000);
@@ -289,7 +293,7 @@ const handleRenameFolder = () => {
       ElMessage.error(res.msg);
     }
     emit("createSuccessFolder");
-    ElMessage.success("删除文件夹成功");
+    ElMessage.success("重命名文件夹成功");
   });
 };
 
@@ -309,15 +313,6 @@ const handleRemoveFolder = () => {
 
 // 下载markdown文件
 const downloadMarkDownFileId = ref<string>();
-const handleDownLoadMarkDown = () => {
-  if (downloadMarkDownFileId.value) {
-    downLoadMarkDownFile(downloadMarkDownFileId.value).then((res) => {
-      if (res.msg) {
-        ElMessage.error(res.msg);
-      }
-    });
-  }
-};
 
 // 删除markdown文件
 const deleteMarkDownFileId = ref<string>();
@@ -328,6 +323,7 @@ const handleDeleteMarkDown = () => {
         ElMessage.error(res.msg);
         return;
       }
+      ElMessage.error("删除文件成功");
 
       emit("createSuccessFolder");
     });
