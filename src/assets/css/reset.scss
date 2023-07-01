@@ -4,6 +4,7 @@
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .el-card {
@@ -30,4 +31,9 @@ blockquote {
 
 .el-popper.is-pure {
   z-index: 9999 !important;
+}
+
+.content:not(.isNotShow) ~ * {
+  opacity: 0 !important;
+  position: fixed !important;
 }

@@ -23,13 +23,12 @@
       </el-card>
     </div>
     <div @keydown="changeKeyDown">
-      <div class="content" v-show="!isEdit" v-html="fileData"></div>
-      <textarea
-        class="edit-content"
-        v-show="isEdit"
-        style="overflow: hidden"
-        ref="editorRef"
-      >
+      <div
+        class="content"
+        v-html="fileData"
+        :class="{ isNotShow: isEdit }"
+      ></div>
+      <textarea class="edit-content" v-show="isEdit" ref="editorRef">
       </textarea>
     </div>
   </div>
@@ -78,12 +77,34 @@ nextTick(() => {
     element: editorRef.value,
   });
 });
-
 watch(
   () => props.fileRawData,
   (newValue) => {
     if (simplemde) {
       simplemde.value(newValue);
+    }
+  }
+);
+
+const showOpacity = ref<0 | 1>(0);
+const showPosition = ref<"absolute" | "">("absolute");
+const showHeight = ref<0 | "auto">(0);
+const showOverflow = ref<"" | "hidden">("hidden");
+watch(
+  () => props.isEdit,
+  (newVal) => {
+    console.log(props.isEdit);
+
+    if (newVal === false) {
+      showOpacity.value = 0;
+      showPosition.value = "absolute";
+      showHeight.value = 0;
+      showOverflow.value = "hidden";
+    } else {
+      showPosition.value = "";
+      showOpacity.value = 1;
+      showHeight.value = "auto";
+      showOverflow.value = "";
     }
   }
 );
@@ -128,5 +149,45 @@ const changeKeyDown = (event: KeyboardEvent) => {
   .yxxfd-editor {
     text-align: left;
   }
+  .isNotShow {
+    display: none;
+  }
 }
+
+/* :deep(.editor-toolbar) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+}
+:deep(.CodeMirror) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+}
+:deep(.editor-preview-side) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+}
+:deep(.editor-statusbar) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+}
+:deep(.edit-content) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+}
+:deep(.CodeMirror-lines) {
+  opacity: v-bind(showOpacity);
+  position: v-bind(showPosition) !important;
+  height: v-bind(showHeight) !important;
+  overflow: v-bind(showOverflow) !important;
+} */
 </style>
