@@ -191,4 +191,29 @@ html[class="dark"] {
       }
     }
   }
+  .edit-content {
+    .editor-toolbar {
+      border: none;
+      border-top: 1px solid #eeeeee35 !important;
+    }
+    .editor-toolbar a[tabindex] {
+      color: white !important;
+      &:hover {
+        background-color: #141b27;
+      }
+    }
+    .CodeMirror {
+      background-color: #141b27;
+      border: 1px solid #eeeeee1d !important;
+    }
+    .CodeMirror-line {
+      color: rgba(255, 255, 255, 0.88) !important;
+      &::selection {
+        color: black;
+      }
+    }
+    .CodeMirror-cursor {
+      border-color: white;
+    }
+  }
 }

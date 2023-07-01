@@ -192,4 +192,13 @@ html[class="light"] {
       }
     }
   }
+  .edit-content {
+    .CodeMirror {
+      border-left: none;
+      border-right: none;
+    }
+    .editor-toolbar {
+      border: none !important;
+    }
+  }
 }

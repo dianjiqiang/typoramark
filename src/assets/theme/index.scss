@@ -172,4 +172,7 @@ body {
   .cm-spell-error {
     background-color: transparent !important;
   }
+  .CodeMirror .CodeMirror-code .cm-comment {
+    background: none !important;
+  }
 }

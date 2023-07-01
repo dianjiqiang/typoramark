@@ -23,7 +23,13 @@
       </el-card>
     </div>
     <div class="content" v-show="!isEdit" v-html="fileData"></div>
-    <div class="edit-content" style="overflow: hidden" @keydown="changeKeyDown">
+    <div
+      ref="editContentRef"
+      class="edit-content"
+      v-show="isEdit"
+      style="overflow: hidden"
+      @keydown="changeKeyDown"
+    >
       <textarea v-show="!isEdit" ref="editorRef"> </textarea>
     </div>
   </div>
@@ -65,7 +71,7 @@ const openMenu = (e: boolean) => {
 };
 
 // 富文本编辑区域
-const editorRef = ref<HTMLDivElement | null>(null);
+const editorRef = ref<HTMLTextAreaElement | null>(null);
 let simplemde: any;
 nextTick(() => {
   simplemde = new SimpleMDE({
@@ -97,6 +103,29 @@ const changeKeyDown = (event: KeyboardEvent) => {
     );
   }
 };
+
+watch(
+  () => props.isEdit,
+  (newVal) => {
+    if (newVal) {
+      const editContentEl = document.querySelector(
+        ".CodeMirror"
+      ) as HTMLElement;
+      const recurseClick = (clickedEl: HTMLElement) => {
+        const children = clickedEl.children;
+        if (children.length) {
+          for (const child of children) {
+            recurseClick(child as HTMLElement);
+          }
+        } else {
+          console.log("click", clickedEl);
+          clickedEl.click();
+        }
+      };
+      recurseClick(editContentEl);
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss">

@@ -49,7 +49,7 @@ export type uploadFileType = {
 };
 export function postUploadFile(file: uploadFileType) {
   return keyieRequest.file({
-    url: "/markdown?url=" + file.url,
+    url: "/markdown?url=" + encodeURIComponent(file.url),
     data: {
       md: file.md.raw,
     },

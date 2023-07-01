@@ -159,7 +159,7 @@ const setmoon = (el: any) => {
 };
 
 window.onload = function () {
-  mainButton.value.addEventListener("click", function () {
+  components.value.addEventListener("click", function () {
     if (isMoved.value) {
       //白天按钮样式
       mainButton.value.style.transform = "translateX(0)"; //水平平移距离为0px
