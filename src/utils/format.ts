@@ -3,7 +3,6 @@ import type {
   folderInFileType,
   FileType,
 } from "@/store/modules/file";
-import { load } from "cheerio";
 
 export const formatMarkdown = (str: string) => {
   const reg = /<(h1|h2|h3|h4)[^>]*>(.*?)<(\/h1|\/h2|\/h3|\/h4)>/gi;
@@ -112,26 +111,26 @@ export const findFiles = (tree: folderInFileType) => {
   return newArray;
 };
 
-export const clearCodeInspan = (str: string) => {
-  const $ = load(str);
+// export const clearCodeInspan = (str: string) => {
+//   const $ = load(str);
 
-  // 删除带有 class 属性的 span 元素，保留内容
-  for (let index = 0; index < 5; index++) {
-    $("span[class]").each(function () {
-      $(this).replaceWith($(this).html() as string);
-    });
-  }
+//   // 删除带有 class 属性的 span 元素，保留内容
+//   for (let index = 0; index < 5; index++) {
+//     $("span[class]").each(function () {
+//       $(this).replaceWith($(this).html() as string);
+//     });
+//   }
 
-  let decodedString = $.html().replaceAll("<https: ", "https://");
-  decodedString = decodedString.replaceAll('.png="">', ".png");
-  decodedString = decodedString.replaceAll('.com="" img="" ', ".com/img/");
-  decodedString = decodedString.replaceAll("¨NBSP;", " ");
+//   let decodedString = $.html().replaceAll("<https: ", "https://");
+//   decodedString = decodedString.replaceAll('.png="">', ".png");
+//   decodedString = decodedString.replaceAll('.com="" img="" ', ".com/img/");
+//   decodedString = decodedString.replaceAll("¨NBSP;", " ");
 
-  decodedString = decodedString.replaceAll(
-    /(<html>|<\/html>|<!-- -->|<head>|<\/head>|<body>|<\/body>|<\/https:>)/gi,
-    ""
-  );
+//   decodedString = decodedString.replaceAll(
+//     /(<html>|<\/html>|<!-- -->|<head>|<\/head>|<body>|<\/body>|<\/https:>)/gi,
+//     ""
+//   );
 
-  // 输出修改后的 HTML
-  return decodedString;
-};
+//   // 输出修改后的 HTML
+//   return decodedString;
+// };
