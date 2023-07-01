@@ -201,4 +201,26 @@ html[class="light"] {
       border: none !important;
     }
   }
+
+  .CodeMirror {
+    .cm-formatting.cm-formatting-header {
+      color: var(--el-color-primary) !important;
+    }
+    .cm-header.cm-header-1 {
+      color: black;
+    }
+    .cm-header.cm-header-2 {
+      color: rgba($color: #000, $alpha: 0.9);
+    }
+    .cm-header.cm-header-3 {
+      color: rgba($color: #000, $alpha: 0.8);
+    }
+    .cm-header.cm-header-4 {
+      color: rgba($color: #000, $alpha: 0.7);
+    }
+
+    .cm-formatting.cm-formatting-code-block.cm-comment {
+      color: var(--el-color-primary-dark-2);
+    }
+  }
 }

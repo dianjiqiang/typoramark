@@ -164,15 +164,27 @@ body {
   background: rgba(129, 137, 160, 0.4);
 }
 
-.edit-content {
-  .CodeMirror {
-    height: calc(100vh - 120px);
-  }
+.CodeMirror {
+  height: calc(100vh - 120px);
+}
 
-  .cm-spell-error {
-    background-color: transparent !important;
-  }
-  .CodeMirror .CodeMirror-code .cm-comment {
-    background: none !important;
+.cm-spell-error {
+  background-color: transparent !important;
+}
+.CodeMirror .CodeMirror-code .cm-comment {
+  background: none !important;
+}
+.edit-content {
+  display: none;
+}
+
+.cm-formatting.cm-formatting-code-block.cm-comment {
+  display: inline-block;
+}
+
+.CodeMirror-code {
+  .CodeMirror-line {
+    font-family: "fira code" !important;
+    padding: 5px 0;
   }
 }

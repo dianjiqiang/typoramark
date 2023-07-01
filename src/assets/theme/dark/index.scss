@@ -191,29 +191,48 @@ html[class="dark"] {
       }
     }
   }
-  .edit-content {
-    .editor-toolbar {
-      border: none;
-      border-top: 1px solid #eeeeee35 !important;
-    }
-    .editor-toolbar a[tabindex] {
-      color: white !important;
-      &:hover {
-        background-color: #141b27;
-      }
-    }
-    .CodeMirror {
+  .editor-toolbar {
+    border: none;
+    border-top: 1px solid #eeeeee35 !important;
+  }
+  .editor-toolbar a[tabindex] {
+    color: white !important;
+    &:hover {
       background-color: #141b27;
-      border: 1px solid #eeeeee1d !important;
     }
-    .CodeMirror-line {
-      color: rgba(255, 255, 255, 0.88) !important;
-      &::selection {
-        color: black;
-      }
+  }
+  .CodeMirror {
+    background-color: #141b27;
+    border: 1px solid #eeeeee1d !important;
+
+    .cm-formatting.cm-formatting-header {
+      color: var(--el-color-primary) !important;
     }
-    .CodeMirror-cursor {
-      border-color: white;
+    .cm-header.cm-header-1 {
+      color: white;
     }
+    .cm-header.cm-header-2 {
+      color: rgba($color: #fff, $alpha: 0.9);
+    }
+    .cm-header.cm-header-3 {
+      color: rgba($color: #fff, $alpha: 0.8);
+    }
+    .cm-header.cm-header-4 {
+      color: rgba($color: #fff, $alpha: 0.7);
+    }
+
+    .cm-formatting.cm-formatting-code-block.cm-comment {
+      color: var(--el-color-primary-dark-2);
+      display: inline-block;
+    }
+  }
+  .CodeMirror-line {
+    color: rgba(255, 255, 255, 0.7) !important;
+    &::selection {
+      color: black;
+    }
+  }
+  .CodeMirror-cursor {
+    border-color: white;
   }
 }

@@ -22,15 +22,15 @@
         </div>
       </el-card>
     </div>
-    <div class="content" v-show="!isEdit" v-html="fileData"></div>
-    <div
-      ref="editContentRef"
-      class="edit-content"
-      v-show="isEdit"
-      style="overflow: hidden"
-      @keydown="changeKeyDown"
-    >
-      <textarea v-show="!isEdit" ref="editorRef"> </textarea>
+    <div @keydown="changeKeyDown">
+      <div class="content" v-show="!isEdit" v-html="fileData"></div>
+      <textarea
+        class="edit-content"
+        v-show="isEdit"
+        style="overflow: hidden"
+        ref="editorRef"
+      >
+      </textarea>
     </div>
   </div>
 </template>
@@ -89,6 +89,8 @@ watch(
 );
 
 const changeKeyDown = (event: KeyboardEvent) => {
+  console.log("点了");
+
   if (event.ctrlKey && event.key === "s" && props.isEdit && props.fileId) {
     saveEditMarkdown({ text: simplemde.value(), id: props.fileId }).then(
       (res) => {
@@ -103,29 +105,6 @@ const changeKeyDown = (event: KeyboardEvent) => {
     );
   }
 };
-
-watch(
-  () => props.isEdit,
-  (newVal) => {
-    if (newVal) {
-      const editContentEl = document.querySelector(
-        ".CodeMirror"
-      ) as HTMLElement;
-      const recurseClick = (clickedEl: HTMLElement) => {
-        const children = clickedEl.children;
-        if (children.length) {
-          for (const child of children) {
-            recurseClick(child as HTMLElement);
-          }
-        } else {
-          console.log("click", clickedEl);
-          clickedEl.click();
-        }
-      };
-      recurseClick(editContentEl);
-    }
-  }
-);
 </script>
 
 <style scoped lang="scss">
