@@ -191,9 +191,32 @@ html[class="dark"] {
       }
     }
   }
+
+  a[title="Toggle Preview (Ctrl-P)"],
+  a[title="Toggle Side by Side (F9)"] {
+    display: none !important;
+  }
+  .editor-toolbar.fullscreen {
+    background-color: #1e293b;
+
+    &::before {
+      display: none !important;
+    }
+    &::after {
+      display: none !important;
+    }
+
+    .active {
+      background-color: #1e293b !important;
+    }
+  }
   .editor-toolbar {
     border: none;
     border-top: 1px solid #eeeeee35 !important;
+
+    .fa.active {
+      background-color: #1e293b !important;
+    }
   }
   .editor-toolbar a[tabindex] {
     color: white !important;

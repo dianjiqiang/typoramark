@@ -166,6 +166,7 @@ body {
 
 .CodeMirror {
   height: calc(100vh - 120px);
+  padding: 10px 20px;
 }
 
 .cm-spell-error {
@@ -183,8 +184,19 @@ body {
 }
 
 .CodeMirror-code {
+  // padding: 10px 20px;
   .CodeMirror-line {
-    font-family: "fira code" !important;
+    font-family: "Fira Code", "仿宋" !important;
     padding: 5px 0;
   }
+}
+
+.cm-formatting.cm-formatting-code-block.cm-comment:nth-child(2n - 1) {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.cm-formatting.cm-formatting-code-block.cm-comment:nth-child(2n) {
+  padding-top: 10px;
+  padding-bottom: 20px;
 }
