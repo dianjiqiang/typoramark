@@ -25,6 +25,7 @@
     <div @keydown="changeKeyDown">
       <div
         class="content"
+        ref="contentRef"
         v-html="fileData"
         :class="{ isNotShow: isEdit }"
       ></div>
@@ -35,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 
 import { saveEditMarkdown } from "@/service";
 
@@ -126,6 +127,56 @@ const changeKeyDown = (event: KeyboardEvent) => {
     );
   }
 };
+
+// 大纲高亮
+let observer: IntersectionObserver | null = null;
+let editerHeaders: any[] = [];
+const contentRef = ref<HTMLDivElement | null>(null);
+watch(
+  () => props.fileData,
+  () => {
+    nextTick(() => {
+      const h1s = document.querySelectorAll(".content h1");
+      const h2s = document.querySelectorAll(".content h2");
+      const h3s = document.querySelectorAll(".content h3");
+      const h4s = document.querySelectorAll(".content h4");
+      const h5s = document.querySelectorAll(".content h5");
+      const h6s = document.querySelectorAll(".content h6");
+      editerHeaders = [...h1s, ...h2s, ...h3s, ...h4s, ...h5s, ...h6s];
+      for (const header of editerHeaders) {
+        if (observer) {
+          observer.observe(header);
+        }
+      }
+    });
+  }
+);
+const scrollCallback = (e: Event) => {
+  // console.log(e);
+};
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          console.log("enter", entry.target);
+
+          // 目标进入视窗，添加高亮效果
+          // entry.target.classList.add("highlight"); // 假设高亮的类名为'highlight'
+        } else {
+          // 目标离开视窗，移除高亮效果
+          // entry.target.classList.remove("highlight");
+          console.log("leave", entry.target);
+        }
+      }
+    },
+    { root: contentRef.value, rootMargin: "300px 0px 0px 0px" }
+  );
+  contentRef.value?.addEventListener("scroll", scrollCallback);
+});
+onUnmounted(() => {
+  contentRef.value?.removeEventListener("scroll", scrollCallback);
+});
 </script>
 
 <style scoped lang="scss">

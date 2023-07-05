@@ -16,7 +16,11 @@
         v-show="activeName !== '文件'"
         style="padding: 10px 30px"
       >
-        <el-tree :data="outlineData" @node-click="handleTreeContentClick">
+        <el-tree
+          :data="outlineData"
+          @node-click="handleTreeContentClick"
+          :default-expand-all="true"
+        >
           <template #default="value">
             <a
               style="
