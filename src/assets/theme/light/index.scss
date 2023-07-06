@@ -223,4 +223,7 @@ html[class="light"] {
       color: var(--el-color-primary-dark-2);
     }
   }
+  .a-active {
+    color: var(--el-color-primary) !important;
+  }
 }

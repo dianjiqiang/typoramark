@@ -40,6 +40,8 @@ import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 
 import { saveEditMarkdown } from "@/service";
 
+import * as _ from "lodash";
+
 const props = withDefaults(
   defineProps<{
     fileTitle: string;
@@ -129,54 +131,111 @@ const changeKeyDown = (event: KeyboardEvent) => {
 };
 
 // 大纲高亮
-let observer: IntersectionObserver | null = null;
-let editerHeaders: any[] = [];
 const contentRef = ref<HTMLDivElement | null>(null);
+let editerHeaders: any[] = [];
+let outlineLinks: any[] = [];
+let lastActiveOutline: any = null;
+const updateEditerHeaders = () => {
+  nextTick(() => {
+    const h1s = document.querySelectorAll(".content h1");
+    const h2s = document.querySelectorAll(".content h2");
+    const h3s = document.querySelectorAll(".content h3");
+    const h4s = document.querySelectorAll(".content h4");
+    const h5s = document.querySelectorAll(".content h5");
+    const h6s = document.querySelectorAll(".content h6");
+    editerHeaders = [...h1s, ...h2s, ...h3s, ...h4s, ...h5s, ...h6s];
+    editerHeaders = editerHeaders
+      .map((item) => {
+        return { offset: item?.offsetTop, el: item };
+      })
+      .sort((a, b) => {
+        return a.offset - b.offset;
+      });
+    console.log(editerHeaders);
+  });
+};
+const updateOutlineLinks = () => {
+  nextTick(() => {
+    const links = document.querySelectorAll(".content-tree a");
+    outlineLinks = [...links];
+    console.log(outlineLinks);
+  });
+};
+const updateEditorContent = () => {
+  nextTick(() => {
+    for (const header of editerHeaders) {
+      const brEl = document.createElement("br");
+      header.el.after(brEl);
+    }
+  });
+};
 watch(
   () => props.fileData,
   () => {
-    nextTick(() => {
-      const h1s = document.querySelectorAll(".content h1");
-      const h2s = document.querySelectorAll(".content h2");
-      const h3s = document.querySelectorAll(".content h3");
-      const h4s = document.querySelectorAll(".content h4");
-      const h5s = document.querySelectorAll(".content h5");
-      const h6s = document.querySelectorAll(".content h6");
-      editerHeaders = [...h1s, ...h2s, ...h3s, ...h4s, ...h5s, ...h6s];
-      for (const header of editerHeaders) {
-        if (observer) {
-          observer.observe(header);
-        }
-      }
-    });
+    updateEditerHeaders();
+    updateOutlineLinks();
+    updateEditorContent();
   }
 );
-const scrollCallback = (e: Event) => {
-  // console.log(e);
-};
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          console.log("enter", entry.target);
-
-          // 目标进入视窗，添加高亮效果
-          // entry.target.classList.add("highlight"); // 假设高亮的类名为'highlight'
-        } else {
-          // 目标离开视窗，移除高亮效果
-          // entry.target.classList.remove("highlight");
-          console.log("leave", entry.target);
-        }
+const scrollCallback = (e: any) => {
+  const scrollTop = e.target?.scrollTop;
+  const contentOffsetHeight: any = contentRef.value?.offsetHeight;
+  const contentScrollHeight: any = contentRef.value?.scrollHeight;
+  let activeHeader: any = null;
+  for (const index in editerHeaders) {
+    const currentHeader = editerHeaders[index];
+    const nextHeader = editerHeaders[+index + 1];
+    if (nextHeader) {
+      if (
+        scrollTop > currentHeader?.offset &&
+        scrollTop <= nextHeader?.offset
+      ) {
+        activeHeader = nextHeader;
+        console.log("active", nextHeader, currentHeader);
+        break;
       }
-    },
-    { root: contentRef.value, rootMargin: "300px 0px 0px 0px" }
-  );
-  contentRef.value?.addEventListener("scroll", scrollCallback);
+      // if (scrollTop + contentOffsetHeight >= contentScrollHeight) {
+      //   activeHeader = editerHeaders[editerHeaders.length - 1];
+      //   // console.log("active_end", activeHeader);
+      //   break;
+      // }
+      // if (scrollTop === 0 && index === "0") {
+      //   activeHeader = currentHeader;
+      //   // console.log("active", nextHeader, currentHeader);
+      //   break;
+      // }
+      // if (scrollTop <= nextHeader.offset && index === "0") {
+      //   activeHeader = nextHeader;
+      //   // console.log("active", nextHeader, currentHeader);
+      //   break;
+      // }
+    }
+  }
+  if (lastActiveOutline) {
+    lastActiveOutline.classList.remove("a-active");
+  }
+  if (activeHeader) {
+    const targetOutlineLink = outlineLinks.find((item) => {
+      return item.textContent === activeHeader.el?.textContent;
+    });
+    if (targetOutlineLink) {
+      // targetOutlineLink.classList.add("a-active");
+      lastActiveOutline = targetOutlineLink;
+      // location.hash = targetOutlineLink?.textContent;
+    }
+    console.log("targetOutlineLink", targetOutlineLink);
+  }
+};
+
+const _scrollCallback = _.debounce(scrollCallback, 50);
+
+onMounted(() => {
+  contentRef.value?.addEventListener("scroll", _scrollCallback);
 });
 onUnmounted(() => {
-  contentRef.value?.removeEventListener("scroll", scrollCallback);
+  contentRef.value?.removeEventListener("scroll", _scrollCallback);
 });
+defineExpose({ updateOutlineLinks });
 </script>
 
 <style scoped lang="scss">

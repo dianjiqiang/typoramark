@@ -19,7 +19,7 @@
         <el-tree
           :data="outlineData"
           @node-click="handleTreeContentClick"
-          :default-expand-all="true"
+          @node-expand="handleNodeExpand"
         >
           <template #default="value">
             <a
@@ -75,7 +75,7 @@ defineProps<{
   folderData: folderInFileType;
   outlineData: outlineType[];
 }>();
-const emit = defineEmits(["handleTreeClick"]);
+const emit = defineEmits(["handleTreeClick", "handleExpandOutline"]);
 
 // 树
 const handleTreeClick = (e: FolderType) => {
@@ -83,6 +83,7 @@ const handleTreeClick = (e: FolderType) => {
     return;
   }
   emit("handleTreeClick", e);
+  emit("handleExpandOutline");
 };
 // 大纲树
 const handleTreeContentClick = (value: outlineType) => {
@@ -98,6 +99,11 @@ const handleClick = (tab: TabsPaneContext) => {
 // const format = (value: any) => {
 //   return value.;
 // };
+
+// 处理展开大纲树
+const handleNodeExpand = () => {
+  emit("handleExpandOutline");
+};
 </script>
 
 <style scoped lang="scss">

@@ -1,6 +1,11 @@
+import useSystemStore from "@/store/modules/system";
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import type { KeyieRequestConfig } from "./../type/index";
+
+// 创建取消令牌
+const cancelToken = axios.CancelToken;
+const source = cancelToken.source();
 
 class KeyieRequest {
   instance: AxiosInstance;
@@ -12,6 +17,11 @@ class KeyieRequest {
     // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
+        const systemStore = useSystemStore();
+        if (!systemStore.isAuth && !config.url?.includes("permission")) {
+          config.cancelToken = source.token;
+          source.cancel("请求已被取消");
+        }
         // 给每个响应头加上token
         console.log("请求成功的拦截");
         return config;

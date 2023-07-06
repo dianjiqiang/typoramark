@@ -244,6 +244,7 @@ const uploadRef = ref<UploadFile>();
 watch(
   () => props.folderData,
   (newVal) => {
+    folderValue.value = [];
     newVal.forEach((item) => {
       if (item.type === "dir") {
         folderValue.value.push({
