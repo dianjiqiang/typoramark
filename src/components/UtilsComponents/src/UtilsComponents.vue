@@ -112,14 +112,16 @@
           <el-option
             v-for="(item, index) in fileValue"
             :key="index"
-            :label="item.label"
+            :label="`${item.label} (文件夹: ${item?.folderName})`"
             :value="item.id"
           />
         </el-select>
       </label>
       <div style="display: flex; justify-content: center">
         <a
-          :href="'http://www.meant.cc:11235/markdown/' + downloadMarkDownFileId"
+          :href="`${BASE_URL}/markdown/${downloadMarkDownFileId}?authorization=${localStorage.getItem(
+            'accessKey'
+          )}`"
           target="_blank"
         >
           <el-button
@@ -138,7 +140,7 @@
           <el-option
             v-for="(item, index) in fileValue"
             :key="index"
-            :label="item.label"
+            :label="`${item.label} (文件夹: ${item?.folderName})`"
             :value="item.id"
           />
         </el-select>
@@ -160,7 +162,7 @@
           <el-option
             v-for="(item, index) in fileValue"
             :key="index"
-            :label="item.label"
+            :label="`${item.label} (文件夹: ${item?.folderName})`"
             :value="item.id"
           />
         </el-select>
@@ -202,6 +204,7 @@ import {
 
 import type { folderInFileType, FileType } from "@/store/modules/file";
 import { findFiles } from "@/utils/format";
+import { BASE_URL } from "../../../service/config";
 
 const drawer = ref(false);
 const emit = defineEmits(["createSuccessFolder"]);
@@ -230,6 +233,7 @@ const handleCreateFolder = () => {
       folderName.value = "";
       return;
     } else {
+      folderName.value = "";
       ElMessage.success("创建文件夹成功");
       emit("createSuccessFolder");
     }
@@ -295,6 +299,8 @@ const handleRenameFolder = () => {
     }
     emit("createSuccessFolder");
     ElMessage.success("重命名文件夹成功");
+    renameFolder.value = "";
+    newNameFile.value = "";
   });
 };
 
@@ -308,6 +314,7 @@ const handleRemoveFolder = () => {
       }
       emit("createSuccessFolder");
       ElMessage.success("删除文件夹成功");
+      deletePath.value = "";
     });
   }
 };
@@ -324,8 +331,8 @@ const handleDeleteMarkDown = () => {
         ElMessage.error(res.msg);
         return;
       }
-      ElMessage.error("删除文件成功");
-
+      ElMessage.success("删除文件成功");
+      deleteMarkDownFileId.value = "";
       emit("createSuccessFolder");
     });
   }
@@ -346,9 +353,13 @@ const handleRenameMarkDown = () => {
       }
       emit("createSuccessFolder");
       ElMessage.success("重命名文件成功");
+      renameFileId.value = "";
+      newRenameFile.value = "";
     });
   }
 };
+
+const localStorage = window.localStorage;
 </script>
 
 <style scoped lang="scss">

@@ -100,9 +100,10 @@ export const findFiles = (tree: folderInFileType) => {
       newArray.push(item);
     } else {
       if (item.children.length) {
+        const folderName = item?.name;
         item.children.forEach((item) => {
           if (item.type === "file") {
-            newArray.push(item);
+            newArray.push({ ...item, folderName });
           }
         });
       }

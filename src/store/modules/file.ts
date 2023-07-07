@@ -5,6 +5,8 @@ export type FileType = {
   id: string;
   type: string;
   path: string;
+  name?: string;
+  folderName?: string;
 };
 
 export type FolderType = {

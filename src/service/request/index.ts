@@ -2,6 +2,7 @@ import useSystemStore from "@/store/modules/system";
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import type { KeyieRequestConfig } from "./../type/index";
+import { UNAUTH_ERROR_CODE } from "@/constants/constants";
 
 // 创建取消令牌
 const cancelToken = axios.CancelToken;
@@ -18,11 +19,19 @@ class KeyieRequest {
     this.instance.interceptors.request.use(
       (config) => {
         const systemStore = useSystemStore();
-        if (!systemStore.isAuth && !config.url?.includes("permission")) {
+        if (
+          !systemStore.isAuth &&
+          !config.url?.includes("/permission/verify")
+        ) {
           config.cancelToken = source.token;
           source.cancel("请求已被取消");
         }
         // 给每个响应头加上token
+        const accessKey = localStorage.getItem("accessKey");
+        if (!config.headers) {
+          config.headers = {};
+        }
+        config.headers.authorization = accessKey;
         console.log("请求成功的拦截");
         return config;
       },
@@ -34,6 +43,16 @@ class KeyieRequest {
     // 全局结果拦截器
     this.instance.interceptors.response.use(
       (res) => {
+        const isVerify = res.request.responseURL.includes("/permission/verify");
+        if (
+          !isVerify &&
+          res.data.code !== undefined &&
+          res.data.code === UNAUTH_ERROR_CODE
+        ) {
+          const systemStore = useSystemStore();
+          systemStore.isAuth = false;
+          throw new Error("UNAUTH_ERROR");
+        }
         return res.data;
       },
       (err) => {

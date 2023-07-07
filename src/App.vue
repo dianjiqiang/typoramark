@@ -78,9 +78,9 @@ const handleTreeClick = (e: FolderType) => {
     fileId.value = e.id;
     // 获取到详细内容后 返回
     getHomeMdFile(e.name).then((res) => {
-      outlineData.value = formatMarkdown(res.data.content);
-      fileRawData.value = res.data.raw;
-      fileData.value = res.data.content;
+      outlineData.value = formatMarkdown(res.data?.content);
+      fileRawData.value = res.data?.raw;
+      fileData.value = res.data?.content;
     });
   }
 };
@@ -131,7 +131,7 @@ const handleExpandOutline = () => {
 const systemStore = useSystemStore();
 const { isAuth } = storeToRefs(systemStore);
 const inputCode = ref("");
-const handleVerifyAccessKey = (event) => {
+const handleVerifyAccessKey = (event = null) => {
   if (event && !inputCode.value) return;
   const localKey = localStorage.getItem("accessKey");
   const md5Key = cryptoJs.MD5(inputCode.value).toString();
