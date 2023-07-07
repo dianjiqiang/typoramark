@@ -258,4 +258,7 @@ html[class="dark"] {
   .CodeMirror-cursor {
     border-color: white;
   }
+  .a-active {
+    color: var(--el-color-primary) !important;
+  }
 }
