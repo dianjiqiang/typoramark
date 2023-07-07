@@ -1,5 +1,11 @@
 <template>
   <div class="home-content">
+    <!-- <div
+      class="test-scrolltop"
+      style="position: fixed; top: 10px; z-index: 9; opacity: 1"
+    >
+      {{ testScrollTop }}
+    </div> -->
     <div class="top">
       <el-card class="content-title-card">
         <div class="icon" style="width: 30px; height: 30px">
@@ -132,9 +138,11 @@ const changeKeyDown = (event: KeyboardEvent) => {
 
 // 大纲高亮
 const contentRef = ref<HTMLDivElement | null>(null);
+// const testScrollTop = ref(0);
 let editerHeaders: any[] = [];
 let outlineLinks: any[] = [];
 let lastActiveOutline: any = null;
+let lastActiveHeader: any = null;
 const updateEditerHeaders = () => {
   nextTick(() => {
     const h1s = document.querySelectorAll(".content h1");
@@ -144,6 +152,27 @@ const updateEditerHeaders = () => {
     const h5s = document.querySelectorAll(".content h5");
     const h6s = document.querySelectorAll(".content h6");
     editerHeaders = [...h1s, ...h2s, ...h3s, ...h4s, ...h5s, ...h6s];
+    // console.log(editerHeaders);
+  });
+};
+const updateOutlineLinks = () => {
+  nextTick(() => {
+    const links = document.querySelectorAll(".content-tree a");
+    outlineLinks = [...links];
+    // console.log(outlineLinks);
+  });
+};
+const updateEditorContent = () => {
+  nextTick(() => {
+    for (const header of editerHeaders) {
+      const brEl = document.createElement("br");
+      header.after(brEl);
+    }
+    // for (const header of editerHeaders) {
+    //   const spanEl = document.createElement("span");
+    //   spanEl.innerText = `(${header.offsetTop})`;
+    //   header.after(spanEl);
+    // }
     editerHeaders = editerHeaders
       .map((item) => {
         return { offset: item?.offsetTop, el: item };
@@ -151,84 +180,86 @@ const updateEditerHeaders = () => {
       .sort((a, b) => {
         return a.offset - b.offset;
       });
-    console.log(editerHeaders);
   });
 };
-const updateOutlineLinks = () => {
+const waitImageLoaded = (callback: () => void) => {
   nextTick(() => {
-    const links = document.querySelectorAll(".content-tree a");
-    outlineLinks = [...links];
-    console.log(outlineLinks);
-  });
-};
-const updateEditorContent = () => {
-  nextTick(() => {
-    for (const header of editerHeaders) {
-      const brEl = document.createElement("br");
-      header.el.after(brEl);
+    const imgs = document.querySelectorAll(".content img");
+    // console.log(imgs);
+    let loadedImgs = 0;
+    if (imgs.length === 0 && typeof callback === "function") {
+      callback();
+      return;
+    }
+    for (const index in imgs) {
+      const imgEl: any = imgs[index];
+      if (typeof imgEl !== "object") continue;
+      imgEl.onload = () => {
+        loadedImgs++;
+        // console.log(`${imgEl.src} 加载完成`);
+
+        if (loadedImgs === imgs.length && typeof callback === "function") {
+          callback();
+          // console.log("所有图片加载完成");
+        }
+      };
     }
   });
+};
+const resetData = () => {
+  editerHeaders = [];
+  outlineLinks = [];
+  lastActiveHeader = null;
+  lastActiveOutline = null;
 };
 watch(
   () => props.fileData,
   () => {
-    updateEditerHeaders();
-    updateOutlineLinks();
-    updateEditorContent();
+    const callback = () => {
+      updateEditerHeaders();
+      updateOutlineLinks();
+      updateEditorContent();
+    };
+    resetData();
+    waitImageLoaded(callback);
   }
 );
 const scrollCallback = (e: any) => {
   const scrollTop = e.target?.scrollTop;
-  const contentOffsetHeight: any = contentRef.value?.offsetHeight;
-  const contentScrollHeight: any = contentRef.value?.scrollHeight;
+  // testScrollTop.value = scrollTop;
   let activeHeader: any = null;
+  for (const link of outlineLinks) {
+    link.parentElement.parentElement.classList.remove("is-focusable");
+  }
   for (const index in editerHeaders) {
     const currentHeader = editerHeaders[index];
-    const nextHeader = editerHeaders[+index + 1];
-    if (nextHeader) {
-      if (
-        scrollTop > currentHeader?.offset &&
-        scrollTop <= nextHeader?.offset
-      ) {
-        activeHeader = nextHeader;
-        console.log("active", nextHeader, currentHeader);
-        break;
-      }
-      // if (scrollTop + contentOffsetHeight >= contentScrollHeight) {
-      //   activeHeader = editerHeaders[editerHeaders.length - 1];
-      //   // console.log("active_end", activeHeader);
-      //   break;
-      // }
-      // if (scrollTop === 0 && index === "0") {
-      //   activeHeader = currentHeader;
-      //   // console.log("active", nextHeader, currentHeader);
-      //   break;
-      // }
-      // if (scrollTop <= nextHeader.offset && index === "0") {
-      //   activeHeader = nextHeader;
-      //   // console.log("active", nextHeader, currentHeader);
-      //   break;
-      // }
+    const ctOffset = currentHeader?.offset;
+    // console.log(ctOffset);
+    if (scrollTop <= ctOffset) {
+      activeHeader = currentHeader;
+      break;
     }
   }
   if (lastActiveOutline) {
     lastActiveOutline.classList.remove("a-active");
   }
+  if (lastActiveHeader) {
+    lastActiveHeader.el.classList.remove("a-active");
+  }
   if (activeHeader) {
+    lastActiveHeader = activeHeader;
     const targetOutlineLink = outlineLinks.find((item) => {
       return item.textContent === activeHeader.el?.textContent;
     });
     if (targetOutlineLink) {
-      // targetOutlineLink.classList.add("a-active");
+      targetOutlineLink.classList.add("a-active");
       lastActiveOutline = targetOutlineLink;
       // location.hash = targetOutlineLink?.textContent;
     }
-    console.log("targetOutlineLink", targetOutlineLink);
+    // console.log("targetOutlineLink", targetOutlineLink);
   }
 };
-
-const _scrollCallback = _.debounce(scrollCallback, 50);
-
+const _scrollCallback = _.debounce(scrollCallback, 300);
 onMounted(() => {
   contentRef.value?.addEventListener("scroll", _scrollCallback);
 });
@@ -251,6 +282,7 @@ defineExpose({ updateOutlineLinks });
     scroll-behavior: smooth;
     overflow-y: auto;
     overflow-x: hidden;
+    position: relative;
   }
   .icon {
     display: flex;
