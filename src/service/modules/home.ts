@@ -113,7 +113,7 @@ export function saveEditMarkdown(data: { id: string; text: string }) {
 // 验证口令是否正确
 export function verifyAccessKey(accessKey: string) {
   return keyieRequest.post({
-    url: "http://127.0.0.1:9412/permission/verify",
+    url: "/permission/verify",
     data: { accessKey },
   });
 }

@@ -15,6 +15,7 @@ const useSystemStore = defineStore("system", {
         localStorage.setItem("accessKey", accessKey);
         ElMessage.success("授权成功！");
       } else {
+        localStorage.removeItem("accessKey");
         ElMessage.error(result?.msg || "授权失败，请检查口令是否正确");
       }
       if (typeof callback === "function") {
