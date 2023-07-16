@@ -220,6 +220,14 @@ const waitImageLoaded = (callback: () => void) => {
           // console.log("所有图片加载完成");
         }
       };
+      imgEl.onerror = () => {
+        loadedImgs++;
+        // console.log(`${imgEl.src} 加载失败`);
+        if (loadedImgs === imgs.length && typeof callback === "function") {
+          callback();
+          // console.log("所有图片加载完成");
+        }
+      };
     }
   });
 };
