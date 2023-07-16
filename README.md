@@ -17,3 +17,12 @@
 # 关于
 
 本项目来自, 游戏小分队, 禁止商用.
+
+# 演示图片
+![亮色展示](https://raw.githubusercontent.com/dianjiqiang/picGoEnt/main/git/20230715015030.png)
+
+![暗色展示](https://raw.githubusercontent.com/dianjiqiang/picGoEnt/main/git/20230715015102.png)
+
+![上传展示](https://raw.githubusercontent.com/dianjiqiang/picGoEnt/main/git/20230715015150.png)
+
+![编辑器展示](https://raw.githubusercontent.com/dianjiqiang/picGoEnt/main/git/20230715015244.png)
