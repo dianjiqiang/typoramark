@@ -311,6 +311,7 @@ const handleRemoveFolder = () => {
     deleteFolder(deletePath.value).then((res) => {
       if (res.msg) {
         ElMessage.error(res.msg);
+        return;
       }
       emit("createSuccessFolder");
       ElMessage.success("删除文件夹成功");
