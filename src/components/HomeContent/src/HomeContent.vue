@@ -137,27 +137,36 @@ const changeKeyDown = (event: KeyboardEvent) => {
 };
 
 // 大纲高亮
+type EditerHeader = {
+  offset: number;
+  el: Element;
+};
+type ActiveHeader = {
+  offset: number;
+  el: Element;
+};
 const contentRef = ref<HTMLDivElement | null>(null);
 // const testScrollTop = ref(0);
-let editerHeaders: any[] = [];
-let outlineLinks: any[] = [];
-let lastActiveOutline: any = null;
-let lastActiveHeader: any = null;
+let editerHeaders: EditerHeader[] | HTMLHeadingElement[] = [];
+let outlineLinks: HTMLAnchorElement[] = [];
+let lastActiveOutline: Element | null = null;
+let lastActiveHeader: ActiveHeader | null = null;
 const updateEditerHeaders = () => {
   nextTick(() => {
-    const h1s = document.querySelectorAll(".content h1");
-    const h2s = document.querySelectorAll(".content h2");
-    const h3s = document.querySelectorAll(".content h3");
-    const h4s = document.querySelectorAll(".content h4");
-    const h5s = document.querySelectorAll(".content h5");
-    const h6s = document.querySelectorAll(".content h6");
+    const h1s = document.querySelectorAll<HTMLHeadingElement>(".content h1");
+    const h2s = document.querySelectorAll<HTMLHeadingElement>(".content h2");
+    const h3s = document.querySelectorAll<HTMLHeadingElement>(".content h3");
+    const h4s = document.querySelectorAll<HTMLHeadingElement>(".content h4");
+    const h5s = document.querySelectorAll<HTMLHeadingElement>(".content h5");
+    const h6s = document.querySelectorAll<HTMLHeadingElement>(".content h6");
     editerHeaders = [...h1s, ...h2s, ...h3s, ...h4s, ...h5s, ...h6s];
     // console.log(editerHeaders);
   });
 };
 const updateOutlineLinks = () => {
   nextTick(() => {
-    const links = document.querySelectorAll(".content-tree a");
+    const links =
+      document.querySelectorAll<HTMLAnchorElement>(".content-tree a");
     outlineLinks = [...links];
     // console.log(outlineLinks);
   });
@@ -166,7 +175,8 @@ const updateEditorContent = () => {
   nextTick(() => {
     for (const header of editerHeaders) {
       const brEl = document.createElement("br");
-      header.after(brEl);
+      const headingEl = header as Element;
+      headingEl.after(brEl);
     }
     // for (const header of editerHeaders) {
     //   const spanEl = document.createElement("span");
@@ -175,16 +185,17 @@ const updateEditorContent = () => {
     // }
     editerHeaders = editerHeaders
       .map((item) => {
-        return { offset: item?.offsetTop, el: item };
+        const divEl = item as HTMLDivElement;
+        return { offset: divEl?.offsetTop, el: item };
       })
       .sort((a, b) => {
         return a.offset - b.offset;
-      });
+      }) as EditerHeader[];
   });
 };
 const waitImageLoaded = (callback: () => void) => {
   nextTick(() => {
-    const imgs = document.querySelectorAll(".content img");
+    const imgs = document.querySelectorAll<HTMLImageElement>(".content img");
     // console.log(imgs);
     let loadedImgs = 0;
     if (imgs.length === 0 && typeof callback === "function") {
@@ -192,12 +203,18 @@ const waitImageLoaded = (callback: () => void) => {
       return;
     }
     for (const index in imgs) {
-      const imgEl: any = imgs[index];
+      const imgEl: HTMLImageElement = imgs[index];
       if (typeof imgEl !== "object") continue;
+      if (!imgEl.src || !imgEl.src?.trim()) {
+        loadedImgs++;
+        if (loadedImgs === imgs.length && typeof callback === "function") {
+          callback();
+        }
+        continue;
+      }
       imgEl.onload = () => {
         loadedImgs++;
         // console.log(`${imgEl.src} 加载完成`);
-
         if (loadedImgs === imgs.length && typeof callback === "function") {
           callback();
           // console.log("所有图片加载完成");
@@ -224,15 +241,16 @@ watch(
     waitImageLoaded(callback);
   }
 );
-const scrollCallback = (e: any) => {
-  const scrollTop = e.target?.scrollTop;
+const scrollCallback = (e: Event) => {
+  const targetElement = e.target as HTMLDivElement;
+  const scrollTop = targetElement.scrollTop;
   // testScrollTop.value = scrollTop;
-  let activeHeader: any = null;
+  let activeHeader: ActiveHeader | null = null;
   for (const link of outlineLinks) {
-    link.parentElement.parentElement.classList.remove("is-focusable");
+    link?.parentElement?.parentElement?.classList.remove("is-focusable");
   }
   for (const index in editerHeaders) {
-    const currentHeader = editerHeaders[index];
+    const currentHeader = editerHeaders[index] as ActiveHeader;
     const ctOffset = currentHeader?.offset;
     // console.log(ctOffset);
     if (scrollTop <= ctOffset) {
@@ -249,7 +267,7 @@ const scrollCallback = (e: any) => {
   if (activeHeader) {
     lastActiveHeader = activeHeader;
     const targetOutlineLink = outlineLinks.find((item) => {
-      return item.textContent === activeHeader.el?.textContent;
+      return item.textContent === activeHeader?.el?.textContent;
     });
     if (targetOutlineLink) {
       targetOutlineLink.classList.add("a-active");
