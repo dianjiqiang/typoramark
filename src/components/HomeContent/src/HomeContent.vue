@@ -177,6 +177,7 @@ const updateEditorContent = () => {
       const brEl = document.createElement("br");
       const headingEl = header as Element;
       headingEl.after(brEl);
+      headingEl.before(brEl);
     }
     // for (const header of editerHeaders) {
     //   const spanEl = document.createElement("span");
