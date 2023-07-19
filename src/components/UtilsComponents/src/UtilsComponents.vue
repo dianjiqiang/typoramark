@@ -119,8 +119,8 @@
       </label>
       <div style="display: flex; justify-content: center">
         <a
-          :href="`${BASE_URL}/markdown/${downloadMarkDownFileId}?authorization=${localStorage.getItem(
-            'accessKey'
+          :href="`${BASE_URL}/markdown/download/${downloadMarkDownFileId}?authorization=${localStorage.getItem(
+            'token'
           )}`"
           target="_blank"
         >

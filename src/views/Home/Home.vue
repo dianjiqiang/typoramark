@@ -39,7 +39,7 @@ import type {
   folderInFileType,
   FolderType,
   outlineType,
-} from "./store/modules/file";
+} from "@/store/modules/file";
 
 // 点击了隐藏menu
 const isHidden = ref(false);
@@ -86,11 +86,15 @@ const keydownFn = (event: KeyboardEvent) => {
   }
 };
 onMounted(() => {
-  window.addEventListener("keydown", keydownFn);
+  if (window) {
+    window.addEventListener("keydown", keydownFn);
+  }
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", keydownFn);
+  if (window) {
+    window.removeEventListener("keydown", keydownFn);
+  }
 });
 
 // 创建文件夹

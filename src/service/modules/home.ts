@@ -21,7 +21,7 @@ export function getDownLoadMdFile(id: string) {
 // 获取文件树
 export function getFileTree() {
   return keyieRequest.request<any>({
-    url: "/markdown/file/tree",
+    url: "/markdown/file/tree/private",
   });
 }
 

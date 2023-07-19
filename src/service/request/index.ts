@@ -3,10 +3,8 @@ import axios from "axios";
 import type { AxiosInstance } from "axios";
 import type { KeyieRequestConfig } from "./../type/index";
 import { UNAUTH_ERROR_CODE } from "@/constants/constants";
-
-// 创建取消令牌
-const cancelToken = axios.CancelToken;
-const source = cancelToken.source();
+import { ElMessage } from "element-plus";
+import router from "@/router";
 
 class KeyieRequest {
   instance: AxiosInstance;
@@ -18,21 +16,12 @@ class KeyieRequest {
     // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        const systemStore = useSystemStore();
-        if (
-          !systemStore.isAuth &&
-          !config.url?.includes("/permission/verify")
-        ) {
-          config.cancelToken = source.token;
-          source.cancel("请求已被取消");
-        }
-        // 给每个响应头加上token
-        const accessKey = localStorage.getItem("accessKey");
-        if (!config.headers) {
+        console.log("请求成功的拦截");
+        const token = localStorage.getItem("token");
+        if (!config?.headers) {
           config.headers = {};
         }
-        config.headers.authorization = accessKey;
-        console.log("请求成功的拦截");
+        config.headers.authorization = token;
         return config;
       },
       (err) => {
@@ -43,15 +32,14 @@ class KeyieRequest {
     // 全局结果拦截器
     this.instance.interceptors.response.use(
       (res) => {
-        const isVerify = res.request.responseURL.includes("/permission/verify");
-        if (
-          !isVerify &&
-          res.data.code !== undefined &&
-          res.data.code === UNAUTH_ERROR_CODE
-        ) {
-          const systemStore = useSystemStore();
-          systemStore.isAuth = false;
-          throw new Error("UNAUTH_ERROR");
+        const { code, msg } = res.data;
+        if (code !== 0 && msg) {
+          ElMessage.error(msg);
+          if (code === UNAUTH_ERROR_CODE) {
+            router.replace("/login");
+          }
+        } else {
+          msg && ElMessage.success(msg);
         }
         return res.data;
       },
