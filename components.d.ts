@@ -19,6 +19,8 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     HomeContent: typeof import('./src/components/HomeContent/src/HomeContent.vue')['default']
     HomeFolder: typeof import('./src/components/HomeFolder/src/HomeFolder.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     ThemeButton: typeof import('./src/components/ThemeButton/src/ThemeButton.vue')['default']
     UtilsComponents: typeof import('./src/components/UtilsComponents/src/UtilsComponents.vue')['default']
   }

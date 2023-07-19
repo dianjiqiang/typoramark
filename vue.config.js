@@ -4,6 +4,7 @@ const { ProvidePlugin } = require("webpack");
 const Components = require("unplugin-vue-components/webpack");
 const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
 const hljs = require("highlight.js");
+const path = require('path')
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -84,5 +85,10 @@ module.exports = defineConfig({
         // SimpleMDE: "SimpleMDE",
       }),
     ],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src")
+      }
+    }
   },
 });
