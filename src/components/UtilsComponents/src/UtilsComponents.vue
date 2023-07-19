@@ -7,6 +7,55 @@
     />
 
     <el-drawer v-model="drawer" title="I am the title" :with-header="false">
+      <h3>查看分享的文件</h3>
+      <div style="display: flex; flex-direction: column; align-items: center">
+        <el-input
+          v-model.trim="shareCode"
+          placeholder="请输入分享码"
+        ></el-input>
+        <el-button
+          @click="handleUseShareCode"
+          type="primary"
+          style="margin-top: 20px; width: 300px"
+          size="large"
+          >查看分享</el-button
+        >
+        <el-button
+          @click="handleRemoveShareCode"
+          type="primary"
+          style="margin-top: 20px; width: 300px; margin-left: 0"
+          size="large"
+          >取消查看</el-button
+        >
+      </div>
+
+      <h3>创建分享</h3>
+      <div style="display: flex; flex-direction: column; align-items: center">
+        <label class="flex" style="max-width: 94%">
+          <span class="label">请选择文件夹: </span>
+          <el-select v-model.trim="sharedPath" placeholder="请选择文件夹">
+            <el-option
+              v-for="(item, index) in folderValue"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </label>
+        <el-input
+          style="margin-top: 20px; max-width: 94%"
+          v-model.trim="createShareCode"
+          placeholder="请输入分享码"
+        ></el-input>
+        <el-button
+          @click="handleCreateShare"
+          type="primary"
+          style="margin-top: 20px; width: 300px; margin-left: 0"
+          size="large"
+          >创建分享</el-button
+        >
+      </div>
+
       <h3>创建文件夹</h3>
       <el-input v-model="folderName" placeholder="请输入文件夹名"></el-input>
       <div style="display: flex; justify-content: center">
@@ -184,6 +233,17 @@
           >重命名</el-button
         >
       </div>
+
+      <h3>退出登录</h3>
+      <div style="display: flex; justify-content: center">
+        <el-button
+          @click="handleLogout"
+          type="primary"
+          style="margin-top: 20px; width: 300px; margin-left: 0"
+          size="large"
+          >确认退出</el-button
+        >
+      </div>
     </el-drawer>
   </div>
 </template>
@@ -205,9 +265,16 @@ import {
 import type { folderInFileType, FileType } from "@/store/modules/file";
 import { findFiles } from "@/utils/format";
 import { BASE_URL } from "../../../service/config";
+import useLoginStore from "@/store/modules/login";
+import useHomeStore from "@/store/modules/home";
+import router from "@/router";
 
 const drawer = ref(false);
-const emit = defineEmits(["createSuccessFolder"]);
+const emit = defineEmits([
+  "createSuccessFolder",
+  "getSharedTree",
+  "removeSharedTree",
+]);
 const props = withDefaults(
   defineProps<{
     folderData: folderInFileType;
@@ -360,7 +427,43 @@ const handleRenameMarkDown = () => {
   }
 };
 
+// 下载md文件
 const localStorage = window.localStorage;
+
+// 查看和取消查看分享的文件
+const shareCode = ref("");
+watch(shareCode, (newVal) => {
+  localStorage.setItem("shareCode", newVal);
+});
+const loginStore = useLoginStore();
+const handleUseShareCode = () => {
+  const shareCodeValue = shareCode.value;
+  if (!shareCodeValue) return;
+  const onSuccess = (res: any) => {
+    emit("getSharedTree", res?.data);
+  };
+  loginStore.getShareCodeTreeAction(shareCodeValue, onSuccess);
+};
+const handleRemoveShareCode = () => {
+  emit("removeSharedTree");
+};
+
+// 创建分享
+const sharedPath = ref("");
+const createShareCode = ref("");
+const homeStore = useHomeStore();
+const handleCreateShare = () => {
+  const sharedPathValue = sharedPath.value;
+  const shareCodeValue = createShareCode.value;
+  if (!sharedPathValue || !shareCodeValue) return;
+  homeStore.createShareAction(sharedPathValue, shareCodeValue);
+};
+
+// 退出登录
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  router.replace("/login");
+};
 </script>
 
 <style scoped lang="scss">

@@ -19,6 +19,9 @@
       @SaveKeydown="SaveKeydown"
     />
     <UtilsComponents
+      v-if="!isGuest"
+      @getSharedTree="handleGetSharedTree"
+      @removeSharedTree="handleRemoveShareTree"
       @createSuccessFolder="createSuccessFolder"
       :folderData="folderData"
     />
@@ -27,6 +30,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
 
 import HomeFolder from "@/components/HomeFolder";
 import HomeContent from "@/components/HomeContent";
@@ -34,12 +38,19 @@ import { formatMarkdown } from "@/utils/format";
 import useThemeStore from "@/store/modules/theme";
 import UtilsComponents from "@/components/UtilsComponents";
 import { getHomeMdFile, getFileTree } from "@/service";
+import useLoginStore from "@/store/modules/login";
+import router from "@/router";
 
 import type {
   folderInFileType,
   FolderType,
   outlineType,
 } from "@/store/modules/file";
+import { storeToRefs } from "pinia";
+
+const loginStore = useLoginStore();
+const { isGuest } = storeToRefs(loginStore);
+const route = useRoute();
 
 // 点击了隐藏menu
 const isHidden = ref(false);
@@ -49,8 +60,25 @@ const handleClickHidden = (e: boolean) => {
 
 const folderData = ref<folderInFileType>([]); // 这里不是采用ref定义的  应该是 storeToRefs 这里懒了, 就写伪代码
 onMounted(async () => {
-  const res = await getFileTree();
-  folderData.value = res.data || [];
+  const token = localStorage.getItem("token");
+  const sharedFileTree = loginStore.sharedFileTree;
+  const { shareCode } = route.query;
+  if (shareCode) {
+    if (sharedFileTree) {
+      folderData.value = sharedFileTree || [];
+    } else {
+      const onSuccess = (res) => {
+        folderData.value = res?.data || [];
+      };
+      loginStore.getShareCodeTreeAction(shareCode, onSuccess);
+    }
+  } else if (token) {
+    loginStore.testUserLoginAction();
+    const res = await getFileTree();
+    folderData.value = res.data || [];
+  } else {
+    router.replace("/login");
+  }
 });
 // 树点击
 const outlineData = ref<outlineType[]>([]);
@@ -63,7 +91,8 @@ const handleTreeClick = (e: FolderType) => {
     fileTitle.value = e.label;
     fileId.value = e.id;
     // 获取到详细内容后 返回
-    getHomeMdFile(e.name).then((res) => {
+    const shareCode = localStorage.getItem("shareCode");
+    getHomeMdFile(e.name, shareCode).then((res) => {
       outlineData.value = formatMarkdown(res.data?.content);
       fileRawData.value = res.data?.raw;
       fileData.value = res.data?.content;
@@ -115,6 +144,15 @@ const handleExpandOutline = () => {
   if (typeof homeContentRef.value?.updateOutlineLinks === "function") {
     homeContentRef.value?.updateOutlineLinks();
   }
+};
+
+// 处理查看分享和取消查看分享的事件
+const handleGetSharedTree = (sharedTree) => {
+  folderData.value = sharedTree;
+};
+const handleRemoveShareTree = async () => {
+  const res = await getFileTree();
+  folderData.value = res.data || [];
 };
 </script>
 

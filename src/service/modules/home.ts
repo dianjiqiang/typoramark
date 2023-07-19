@@ -4,10 +4,10 @@ import type { UploadFile } from "element-plus";
 // 现在我们发送网络请求 我们现在这一步 要决定 后续then的类型 如果我们设置any全局都是any类型 我们现在要定义结果类型
 
 // 获取文件详情
-export function getHomeMdFile(id: string) {
+export function getHomeMdFile(id: string, shareCode?: string) {
   // 给我们当前某一个请求添加拦截器
   return keyieRequest.request<any>({
-    url: "/markdown/detail/" + id,
+    url: `/markdown/detail/${id}?shareCode=${shareCode}`,
   });
 }
 
@@ -115,5 +115,13 @@ export function verifyAccessKey(accessKey: string) {
   return keyieRequest.post({
     url: "/permission/verify",
     data: { accessKey },
+  });
+}
+
+// 创建分享
+export function createShare(sharePath: string, shareCode: string) {
+  return keyieRequest.post({
+    url: "/markdown/file/tree/share",
+    data: { sharePath, shareCode },
   });
 }

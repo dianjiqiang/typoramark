@@ -18,7 +18,7 @@
             type="password"
           ></el-input>
         </div>
-        <el-button @click="handleLoginBtnClick">登录</el-button>
+        <el-button type="danger" @click="handleLoginBtnClick">登录</el-button>
         <span class="no-account" @click="changeActiveForm(1)"
           >没有账户？使用分享码查看文件</span
         >
@@ -48,9 +48,12 @@
         <h2 class="title">查看分享</h2>
         <div class="form-item">
           <span class="label">分享码</span>
-          <el-input placeholder="请输入分享码"></el-input>
+          <el-input
+            placeholder="请输入分享码"
+            v-model.trim="userForm.shareCode"
+          ></el-input>
         </div>
-        <el-button @click="handleViewShareClick">确认</el-button>
+        <el-button type="danger" @click="handleViewShareClick">确认</el-button>
         <span class="no-account" @click="changeActiveForm(0)">去登录</span>
       </div>
     </div>
@@ -59,10 +62,10 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import useUserStore from "@/store/modules/user";
+import useLoginStore from "@/store/modules/login";
 import { useRouter } from "vue-router";
 
-const userStore = useUserStore();
+const loginStore = useLoginStore();
 const router = useRouter();
 
 // 表单数据
@@ -70,6 +73,7 @@ const activeFormIndex = ref(0);
 const userForm = reactive({
   name: "",
   password: "",
+  shareCode: localStorage.getItem("shareCode"),
 });
 
 // 切换当前激活的表单
@@ -78,17 +82,25 @@ const changeActiveForm = (index) => {
 };
 
 // 处理登录和查看分享的点击
-
 const handleLoginBtnClick = () => {
   const { name, password } = userForm;
   if (!name || !password) return;
   const onSuccess = () => {
     router.push("/home");
   };
-  userStore.userLoginAction(name, password, onSuccess);
+  loginStore.userLoginAction(name, password, onSuccess);
 };
 const handleViewShareClick = () => {
-  console.log(2);
+  const { shareCode } = userForm;
+  if (!shareCode) return;
+  const onSuccess = () => {
+    localStorage.setItem("shareCode", shareCode);
+    router.push({
+      path: "/home",
+      query: { shareCode },
+    });
+  };
+  loginStore.getShareCodeTreeAction(shareCode, onSuccess);
 };
 </script>
 
@@ -96,13 +108,15 @@ const handleViewShareClick = () => {
 .login {
   display: flex;
   justify-content: center;
+  min-width: 680px;
 }
 
 .login-card {
   display: inline-flex;
   padding: 30px 50px;
-  box-shadow: 0 0 4px 6px #fafafa;
+  box-shadow: 0 0 8px 7px #f7f7f7;
   margin-top: 15%;
+  border-radius: 8px;
   .login-cover {
     order: 2;
     img {
@@ -118,6 +132,7 @@ const handleViewShareClick = () => {
     justify-content: space-evenly;
     .title {
       margin-top: 0;
+      color: #333;
     }
   }
   .login-form1 {
@@ -132,6 +147,16 @@ const handleViewShareClick = () => {
     .label {
       white-space: nowrap;
       width: 90px;
+      color: #333;
+      position: relative;
+      &::after {
+        content: "*";
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 0;
+        color: lightcoral;
+      }
     }
   }
   .no-account {
@@ -146,3 +171,4 @@ const handleViewShareClick = () => {
   }
 }
 </style>
+@/store/modules/login
