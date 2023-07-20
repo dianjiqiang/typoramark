@@ -60,6 +60,28 @@
           size="large"
           >创建分享</el-button
         >
+        <el-button
+          @click="handleShareAll"
+          type="primary"
+          style="margin-top: 20px; width: 300px; margin-left: 0"
+          size="large"
+          >分享所有文件和文件夹</el-button
+        >
+        <el-dialog
+          v-model="shareDialogVisible"
+          title="确认分享全部文件和文件夹？"
+          width="30%"
+        >
+          <span>稍后你可以查看或者取消该分享</span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="shareDialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="handleShareAll">
+                确认
+              </el-button>
+            </span>
+          </template></el-dialog
+        >
       </div>
 
       <h3>创建文件夹</h3>
@@ -256,6 +278,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { ElMessage } from "element-plus";
 import type { UploadFile } from "element-plus";
 
 import {
@@ -465,6 +488,20 @@ const handleCreateShare = () => {
   const shareCodeValue = createShareCode.value;
   if (!sharedPathValue || !shareCodeValue) return;
   homeStore.createShareAction(sharedPathValue, shareCodeValue);
+};
+
+// 创建一个包含所有文件和文件夹的分享
+const shareDialogVisible = ref(false);
+const handleShareAll = () => {
+  const sharedPathValue = "/";
+  const shareCodeValue = createShareCode.value;
+  if (!sharedPathValue || !shareCodeValue) return;
+  if (shareDialogVisible.value) {
+    homeStore.createShareAction(sharedPathValue, shareCodeValue);
+    shareDialogVisible.value = false;
+  } else {
+    shareDialogVisible.value = true;
+  }
 };
 
 // 退出登录
