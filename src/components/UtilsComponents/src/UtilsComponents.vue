@@ -39,21 +39,16 @@
         <el-dialog
           v-model="managerShareDialogVisible"
           title="分享记录"
-          width="80%"
+          width="55%"
         >
           <el-table :data="shares" style="width: 100%" border>
             <el-table-column
               prop="isolateCode"
               label="用户名"
-              width="180"
               align="center"
-            />
-            <el-table-column
-              prop="sharePath"
-              label="分享路径"
               width="180"
-              align="center"
             />
+            <el-table-column prop="sharePath" label="分享路径" align="center" />
             <el-table-column
               prop="shareCode"
               label="分享码"
@@ -70,7 +65,7 @@
                 {{ dayjs(scope.row?.shareTime).format("YYYY-MM-DD HH:mm:ss") }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" width="180">
               <template #default="scope">
                 <el-button
                   type="danger"
