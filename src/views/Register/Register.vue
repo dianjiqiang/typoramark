@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-card">
       <div class="login-form0" v-if="activeFormIndex === 0">
-        <h2 class="title">欢迎登录</h2>
+        <h2 class="title">欢迎注册</h2>
         <div class="form-item">
           <span class="label">用户名</span>
           <el-input
@@ -18,10 +18,20 @@
             type="password"
           ></el-input>
         </div>
-        <el-button type="danger" @click="handleLoginBtnClick">登录</el-button>
+        <div class="form-item">
+          <span class="label">注册码</span>
+          <el-input
+            placeholder="上版本的口令"
+            v-model.trim="userForm.registerCode"
+            type="password"
+          ></el-input>
+        </div>
+        <el-button type="danger" @click="handleRegisterBtnClick"
+          >注册</el-button
+        >
         <span class="no-account">
-          <span>没有账户？&nbsp;</span>
-          <span @click="handleRegisterClick">注册账户 &nbsp;</span>
+          <span>已有账户？&nbsp;</span>
+          <span @click="handleLoginClick">去登录 &nbsp;</span>
           <span @click="changeActiveForm(1)">使用分享码查看文件</span>
         </span>
       </div>
@@ -35,12 +45,12 @@
         "
       >
         <img
-          src="@/assets/image/1.jpg"
+          src="@/assets/image/3.jpg"
           alt="cover"
           v-show="activeFormIndex === 0"
         />
         <img
-          src="@/assets/image/2.jpg"
+          src="@/assets/image/4.jpg"
           alt="cover"
           v-show="activeFormIndex === 1"
         />
@@ -56,7 +66,7 @@
           ></el-input>
         </div>
         <el-button type="danger" @click="handleViewShareClick">确认</el-button>
-        <span class="no-account" @click="changeActiveForm(0)">去登录</span>
+        <span class="no-account" @click="changeActiveForm(0)">去注册</span>
       </div>
     </div>
   </div>
@@ -75,6 +85,7 @@ const activeFormIndex = ref(0);
 const userForm = reactive({
   name: "",
   password: "",
+  registerCode: "",
   shareCode: "",
 });
 
@@ -83,14 +94,14 @@ const changeActiveForm = (index: number) => {
   activeFormIndex.value = index;
 };
 
-// 处理登录和查看分享的点击
-const handleLoginBtnClick = () => {
-  const { name, password } = userForm;
-  if (!name || !password) return;
+// 处理注册用户和查看分享的点击
+const handleRegisterBtnClick = () => {
+  const { name, password, registerCode } = userForm;
+  if (!name || !password || !registerCode) return;
   const onSuccess = () => {
     router.push("/home");
   };
-  loginStore.userLoginAction(name, password, onSuccess);
+  loginStore.registerUserAction(name, password, registerCode, onSuccess);
 };
 const handleViewShareClick = () => {
   const { shareCode } = userForm;
@@ -104,9 +115,9 @@ const handleViewShareClick = () => {
   loginStore.getShareCodeTreeAction(shareCode, onSuccess);
 };
 
-// 处理注册账户
-const handleRegisterClick = () => {
-  router.push("/register");
+// 处理前往登录页
+const handleLoginClick = () => {
+  router.push("/login");
 };
 </script>
 

@@ -7,6 +7,7 @@
       @handleTreeClick="handleTreeClick"
       @handleExpandOutline="handleExpandOutline"
       :outlineData="outlineData"
+      :activeTreeOwner="activeTreeOwner"
     />
     <HomeContent
       ref="homeContentRef"
@@ -52,6 +53,9 @@ const loginStore = useLoginStore();
 const { isGuest } = storeToRefs(loginStore);
 const route = useRoute();
 
+// 文件树拥有者
+const activeTreeOwner = ref("");
+
 // 点击了隐藏menu
 const isHidden = ref(false);
 const handleClickHidden = (e: boolean) => {
@@ -63,19 +67,23 @@ onMounted(async () => {
   const token = localStorage.getItem("token");
   const sharedFileTree = loginStore.sharedFileTree;
   const { shareCode } = route.query;
+  loginStore.shareCode = shareCode as string;
   if (shareCode) {
     if (sharedFileTree) {
       folderData.value = sharedFileTree || [];
+      activeTreeOwner.value = `${loginStore.activeSharer}分享`;
     } else {
-      const onSuccess = (res) => {
-        folderData.value = res?.data || [];
+      const onSuccess = (res: any) => {
+        folderData.value = res?.data?.files || [];
+        activeTreeOwner.value = `${res?.data?.sharer}分享`;
       };
-      loginStore.getShareCodeTreeAction(shareCode, onSuccess);
+      loginStore.getShareCodeTreeAction(String(shareCode), onSuccess);
     }
   } else if (token) {
     loginStore.testUserLoginAction();
     const res = await getFileTree();
     folderData.value = res.data || [];
+    activeTreeOwner.value = loginStore.userInfo?.name || "未知用户";
   } else {
     router.replace("/login");
   }
@@ -91,7 +99,7 @@ const handleTreeClick = (e: FolderType) => {
     fileTitle.value = e.label;
     fileId.value = e.id;
     // 获取到详细内容后 返回
-    const shareCode = localStorage.getItem("shareCode");
+    const shareCode = loginStore.shareCode || "";
     getHomeMdFile(e.name, shareCode).then((res) => {
       outlineData.value = formatMarkdown(res.data?.content);
       fileRawData.value = res.data?.raw;
@@ -147,12 +155,16 @@ const handleExpandOutline = () => {
 };
 
 // 处理查看分享和取消查看分享的事件
-const handleGetSharedTree = (sharedTree) => {
+const handleGetSharedTree = (sharedTree: any[], sharer: string) => {
   folderData.value = sharedTree;
+  activeTreeOwner.value = `${sharer}分享`;
 };
 const handleRemoveShareTree = async () => {
   const res = await getFileTree();
   folderData.value = res.data || [];
+  const owner = loginStore?.userInfo?.name || localStorage.getItem("name");
+  activeTreeOwner.value = owner || "";
+  loginStore.shareCode = "";
 };
 </script>
 

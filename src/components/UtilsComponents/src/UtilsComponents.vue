@@ -8,7 +8,9 @@
 
     <el-drawer v-model="drawer" title="I am the title" :with-header="false">
       <h3>查看分享的文件</h3>
-      <div style="display: flex; flex-direction: column; align-items: center">
+      <div
+        style="display: flex; flex-direction: column; align-items: flex-start"
+      >
         <el-input
           v-model.trim="shareCode"
           placeholder="请输入分享码"
@@ -30,9 +32,13 @@
       </div>
 
       <h3>创建分享</h3>
-      <div style="display: flex; flex-direction: column; align-items: center">
-        <label class="flex" style="max-width: 94%">
-          <span class="label">请选择文件夹: </span>
+      <div
+        style="display: flex; flex-direction: column; align-items: flex-start"
+      >
+        <label class="flex">
+          <span class="label" style="display: inline-block; width: auto"
+            >请选择文件夹:
+          </span>
           <el-select v-model.trim="sharedPath" placeholder="请选择文件夹">
             <el-option
               v-for="(item, index) in folderValue"
@@ -43,7 +49,7 @@
           </el-select>
         </label>
         <el-input
-          style="margin-top: 20px; max-width: 94%"
+          style="margin-top: 20px"
           v-model.trim="createShareCode"
           placeholder="请输入分享码"
         ></el-input>
@@ -58,7 +64,7 @@
 
       <h3>创建文件夹</h3>
       <el-input v-model="folderName" placeholder="请输入文件夹名"></el-input>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleCreateFolder"
           type="primary"
@@ -91,7 +97,7 @@
             <el-button type="primary">请选择文件</el-button>
           </template>
         </el-upload>
-        <div style="display: flex; justify-content: center">
+        <div style="display: flex; justify-content: flex-start">
           <el-button
             @click="uploadFile"
             type="primary"
@@ -122,7 +128,7 @@
           placeholder="请输入文件夹名"
         ></el-input>
       </label>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleRenameFolder"
           type="primary"
@@ -144,7 +150,7 @@
           />
         </el-select>
       </label>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleRemoveFolder"
           type="danger"
@@ -166,7 +172,7 @@
           />
         </el-select>
       </label>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <a
           :href="`${BASE_URL}/markdown/download/${downloadMarkDownFileId}?authorization=${localStorage.getItem(
             'token'
@@ -194,7 +200,7 @@
           />
         </el-select>
       </label>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleDeleteMarkDown"
           type="danger"
@@ -224,7 +230,7 @@
           placeholder="请输入文件名"
         ></el-input>
       </label>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleRenameMarkDown"
           type="primary"
@@ -235,7 +241,7 @@
       </div>
 
       <h3>退出登录</h3>
-      <div style="display: flex; justify-content: center">
+      <div style="display: flex; justify-content: flex-start">
         <el-button
           @click="handleLogout"
           type="primary"
@@ -433,14 +439,16 @@ const localStorage = window.localStorage;
 // 查看和取消查看分享的文件
 const shareCode = ref("");
 watch(shareCode, (newVal) => {
-  localStorage.setItem("shareCode", newVal);
+  loginStore.shareCode = newVal;
 });
 const loginStore = useLoginStore();
 const handleUseShareCode = () => {
   const shareCodeValue = shareCode.value;
   if (!shareCodeValue) return;
   const onSuccess = (res: any) => {
-    emit("getSharedTree", res?.data);
+    const sharedTree = res?.data?.files;
+    const sharer = res?.data?.sharer;
+    emit("getSharedTree", sharedTree, sharer);
   };
   loginStore.getShareCodeTreeAction(shareCodeValue, onSuccess);
 };
@@ -481,10 +489,21 @@ const handleLogout = () => {
     display: flex;
     align-items: center;
     .label {
-      width: 130px;
+      // width: 130px;
+      display: inline-block;
       text-align: right;
       margin-right: 10px;
     }
   }
+  h3:not(:first-child) {
+    margin-top: 50px;
+  }
+}
+:deep(.el-input) {
+  max-width: 300px !important;
+}
+:deep(.el-drawer__body) {
+  padding-left: 40px;
+  min-width: 360px;
 }
 </style>

@@ -21,3 +21,11 @@ export const getShareCodeTree = (shareCode: string) => {
     url: `/markdown/file/tree/share/${shareCode}`,
   });
 };
+
+// 注册用户
+export const registerUser = (name: string, password: string, code: string) => {
+  return keyieRequest.post({
+    url: `/markdown/file/tree/private`,
+    data: { name, password, code },
+  });
+};

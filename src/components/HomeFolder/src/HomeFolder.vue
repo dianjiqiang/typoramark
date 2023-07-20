@@ -2,7 +2,13 @@
   <div>
     <el-card class="box-card">
       <h3 style="text-align: center; margin: 30px">
-        {{ activeName }}
+        {{
+          `${
+            activeName === "文件"
+              ? `${activeTreeOwner ? `${activeTreeOwner}的` : ``}${activeName}`
+              : `${activeName}`
+          }`
+        }}
       </h3>
       <div
         v-show="activeName === '文件'"
@@ -74,6 +80,7 @@ import type { TabsPaneContext } from "element-plus";
 defineProps<{
   folderData: folderInFileType;
   outlineData: outlineType[];
+  activeTreeOwner: string;
 }>();
 const emit = defineEmits(["handleTreeClick", "handleExpandOutline"]);
 

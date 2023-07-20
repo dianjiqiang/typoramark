@@ -5,9 +5,11 @@ import type { UploadFile } from "element-plus";
 
 // 获取文件详情
 export function getHomeMdFile(id: string, shareCode?: string) {
+  const url1 = `/markdown/detail/${id}?shareCode=${shareCode}`;
+  const url2 = `/markdown/detail/${id}`;
   // 给我们当前某一个请求添加拦截器
   return keyieRequest.request<any>({
-    url: `/markdown/detail/${id}?shareCode=${shareCode}`,
+    url: shareCode ? url1 : url2,
   });
 }
 

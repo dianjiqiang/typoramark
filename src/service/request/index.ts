@@ -36,6 +36,7 @@ class KeyieRequest {
         if (code !== 0 && msg) {
           ElMessage.error(msg);
           if (code === UNAUTH_ERROR_CODE) {
+            localStorage.removeItem("token");
             router.replace("/login");
           }
         } else {

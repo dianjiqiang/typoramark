@@ -13,6 +13,10 @@ const routes: RouteRecordRaw[] = [
     path: "/home",
     component: () => import("@/views/Home/Home.vue"),
   },
+  {
+    path: "/register",
+    component: () => import("@/views/Register/Register.vue"),
+  },
 ];
 
 const router = createRouter({
