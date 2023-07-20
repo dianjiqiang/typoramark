@@ -261,4 +261,10 @@ html[class="dark"] {
   .a-active {
     color: var(--el-color-primary) !important;
   }
+  .home-folder {
+    z-index: 9;
+  }
+  .top .el-card {
+    border-left: none !important;
+  }
 }
