@@ -32,7 +32,7 @@
       <div
         class="content"
         ref="contentRef"
-        v-html="fileData"
+        v-html="filterFileData"
         :class="{ isNotShow: isEdit }"
       ></div>
       <textarea class="edit-content" v-show="isEdit" ref="editorRef">
@@ -42,7 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted, computed } from "vue";
+
+import { ElMessage } from "element-plus";
 
 import { saveEditMarkdown } from "@/service";
 
@@ -68,6 +70,8 @@ const emit = defineEmits(["handleClickHidden", "SaveKeydown"]);
 const isHiddenMenu = ref(false);
 const width = ref("calc(100vw - 303px)");
 
+const { SimpleMDE, DOMPurify } = window;
+
 const openMenu = (e: boolean) => {
   isHiddenMenu.value = e;
   if (e === false) {
@@ -90,7 +94,8 @@ watch(
   () => props.fileRawData,
   (newValue) => {
     if (simplemde) {
-      simplemde.value(newValue);
+      const cleanValue = DOMPurify.sanitize(newValue);
+      simplemde.value(cleanValue);
     }
   }
 );
@@ -294,6 +299,15 @@ onUnmounted(() => {
   contentRef.value?.removeEventListener("scroll", _scrollCallback);
 });
 defineExpose({ updateOutlineLinks });
+
+// 过滤编辑过程中的危险数据
+const filterFileData = computed(() => {
+  if (DOMPurify && DOMPurify?.sanitize) {
+    return DOMPurify.sanitize(props.fileData);
+  } else {
+    return props.fileData;
+  }
+});
 </script>
 
 <style scoped lang="scss">

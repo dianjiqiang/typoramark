@@ -80,7 +80,7 @@ onMounted(async () => {
       loginStore.getShareCodeTreeAction(String(shareCode), onSuccess);
     }
   } else if (token) {
-    loginStore.testUserLoginAction();
+    await loginStore.testUserLoginAction();
     const res = await getFileTree();
     folderData.value = res.data || [];
     activeTreeOwner.value = loginStore.userInfo?.name || "未知用户";

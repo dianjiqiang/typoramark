@@ -39,7 +39,7 @@
         <el-dialog
           v-model="managerShareDialogVisible"
           title="分享记录"
-          width="55%"
+          width="75%"
         >
           <el-table :data="shares" style="width: 100%" border>
             <el-table-column
