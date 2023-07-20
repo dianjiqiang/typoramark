@@ -127,3 +127,17 @@ export function createShare(sharePath: string, shareCode: string) {
     data: { sharePath, shareCode },
   });
 }
+
+// 获取所有分享
+export function getShares() {
+  return keyieRequest.get({
+    url: "/markdown/file/tree/share",
+  });
+}
+
+// 取消某个分享
+export function cancelShare(shareCode: string) {
+  return keyieRequest.delete({
+    url: `/markdown/file/tree/share/${shareCode}`,
+  });
+}

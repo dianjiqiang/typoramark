@@ -29,6 +29,61 @@
           size="large"
           >取消查看</el-button
         >
+        <el-button
+          @click="handleManageShares"
+          type="primary"
+          style="margin-top: 20px; width: 300px; margin-left: 0"
+          size="large"
+          >管理所有分享</el-button
+        >
+        <el-dialog
+          v-model="managerShareDialogVisible"
+          title="分享记录"
+          width="80%"
+        >
+          <el-table :data="shares" style="width: 100%" border>
+            <el-table-column
+              prop="isolateCode"
+              label="用户名"
+              width="180"
+              align="center"
+            />
+            <el-table-column
+              prop="sharePath"
+              label="分享路径"
+              width="180"
+              align="center"
+            />
+            <el-table-column
+              prop="shareCode"
+              label="分享码"
+              width="180"
+              align="center"
+            />
+            <el-table-column
+              prop="shareTime"
+              label="分享时间"
+              width="180"
+              align="center"
+            >
+              <template v-slot="scope">
+                {{ dayjs(scope.row?.shareTime).format("YYYY-MM-DD HH:mm:ss") }}
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template #default="scope">
+                <el-button
+                  type="danger"
+                  @click="handleCancelShare(scope.row?.shareCode)"
+                  >取消分享</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+          <template #footer>
+            <span class="dialog-footer"> </span>
+          </template>
+        </el-dialog>
       </div>
 
       <h3>创建分享</h3>
@@ -280,6 +335,7 @@
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import type { UploadFile } from "element-plus";
+import dayjs from "@/utils/dayjs";
 
 import {
   createFolder,
@@ -297,6 +353,7 @@ import { BASE_URL } from "../../../service/config";
 import useLoginStore from "@/store/modules/login";
 import useHomeStore from "@/store/modules/home";
 import router from "@/router";
+import { storeToRefs } from "pinia";
 
 const drawer = ref(false);
 const emit = defineEmits([
@@ -509,6 +566,19 @@ const handleLogout = () => {
   localStorage.removeItem("token");
   loginStore.$reset();
   router.replace("/login");
+};
+
+// 处理管理分享
+const managerShareDialogVisible = ref(false);
+const { shares } = storeToRefs(homeStore);
+const handleManageShares = () => {
+  homeStore.getSharesAction();
+  managerShareDialogVisible.value = true;
+};
+
+// 处理取消分享
+const handleCancelShare = (shareCode: string) => {
+  homeStore.cancelShareAction(shareCode);
 };
 </script>
 
