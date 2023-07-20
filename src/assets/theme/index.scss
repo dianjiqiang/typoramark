@@ -212,3 +212,10 @@ body {
 .login-cover img {
   border-radius: 6px;
 }
+
+.el-tabs__nav-wrap.is-top {
+  height: 100% !important;
+}
+.el-tabs__header.is-top {
+  border: none !important;
+}
