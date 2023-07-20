@@ -470,6 +470,7 @@ const handleCreateShare = () => {
 // 退出登录
 const handleLogout = () => {
   localStorage.removeItem("token");
+  loginStore.$reset();
   router.replace("/login");
 };
 </script>
